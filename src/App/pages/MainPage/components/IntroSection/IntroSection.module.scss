@@ -1,6 +1,6 @@
 @use "@styles" as *;
 
-.page-intro {
+.intro-section {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,7 +32,7 @@
 }
 
 @media screen and (min-width: 425px) {
-  .page-intro {
+  .intro-section {
     &__img-container {
       aspect-ratio: 2.518 /1;
     }
@@ -40,7 +40,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-  .page-intro {
+  .intro-section {
     &__title {
       padding-bottom: var(--space-xl);
     }

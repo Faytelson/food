@@ -1,0 +1,36 @@
+@use "@styles" as *;
+
+.recipe-search-section {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--space-xl);
+  @include container;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+  }
+
+  &__categories {
+    width: 100%;
+    max-width: 300px;
+    align-self: flex-end;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-m);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .recipe-search-section {
+    &__list {
+      column-gap: var(--space-xxl);
+      row-gap: 64px;
+    }
+  }
+}

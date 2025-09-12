@@ -1,6 +1,6 @@
 import React from "react";
 import Text from "@components/Text";
-import styles from "./PageIntro.module.scss";
+import styles from "./IntroSection.module.scss";
 import clsx from "clsx";
 
 export type ImageVariant = {
@@ -15,17 +15,17 @@ export type IntroImage = {
   title: string;
 };
 
-export type PageIntroProps = {
+export type IntroSectionProps = {
   className?: string;
   image: IntroImage;
   children: React.ReactNode;
 };
 
-const PageIntro: React.FC<PageIntroProps> = ({ className, image, children }) => {
+const IntroSection: React.FC<IntroSectionProps> = ({ className, image, children }) => {
   return (
-    <section className={clsx(className, styles["page-intro"])}>
-      <div className={styles["page-intro__img-container"]}>
-        <picture className={styles["page-intro__picture"]}>
+    <section className={clsx(className, styles["intro-section"])}>
+      <div className={styles["intro-section__img-container"]}>
+        <picture className={styles["intro-section__picture"]}>
           {/* mobile */}
           {image.sm.avif && (
             <source
@@ -65,14 +65,14 @@ const PageIntro: React.FC<PageIntroProps> = ({ className, image, children }) => 
             src={image.lg.fallback}
             alt={image.title}
             loading="eager"
-            className={styles["page-intro__img"]}
+            className={styles["intro-section__img"]}
           />
         </picture>
       </div>
       <Text
         tag="h1"
         view="p-20"
-        className={styles["page-intro__title"]}
+        className={styles["intro-section__title"]}
       >
         {children}
       </Text>
@@ -80,4 +80,4 @@ const PageIntro: React.FC<PageIntroProps> = ({ className, image, children }) => 
   );
 };
 
-export default PageIntro;
+export default IntroSection;
