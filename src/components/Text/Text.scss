@@ -1,0 +1,57 @@
+.text {
+  color: inherit;
+  font-family: "Roboto";
+  font-weight: var(--text-weight, 400);
+
+  &_view {
+    &_title {
+      font-weight: var(--text-weight, 700);
+      font-size: 44px;
+      line-height: 109%;
+    }
+
+    &_button {
+      font-weight: var(--text-weight, 400);
+      font-size: 18px;
+      line-height: 100%;
+    }
+
+    &_p-20 {
+      font-weight: var(--text-weight, 400);
+      font-size: 20px;
+      line-height: 24px;
+    }
+
+    &_p-18 {
+      font-weight: var(--text-weight, 400);
+      font-size: 18px;
+      line-height: 22px;
+    }
+
+    &_p-16 {
+      font-weight: var(--text-weight, 400);
+      font-size: 16px;
+      line-height: 125%;
+    }
+
+    &_p-14 {
+      font-weight: var(--text-weight, 400);
+      font-size: 14px;
+      line-height: 129%;
+    }
+  }
+
+  &_color {
+    &_primary {
+      color: var(--color-text-primary);
+    }
+
+    &_secondary {
+      color: var(--color-text-secondary);
+    }
+
+    &_accent {
+      color: var(--color-brand);
+    }
+  }
+}

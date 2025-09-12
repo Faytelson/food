@@ -1,0 +1,49 @@
+@use "@styles" as *;
+
+.page-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include container-main;
+
+  &__img-container {
+    flex-grow: 1;
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  &__picture,
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__title {
+    text-align: center;
+    padding-top: var(--space-l);
+    padding-bottom: var(--space-l);
+    @include container;
+
+    // временные стили
+    a {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media screen and (min-width: 425px) {
+  .page-intro {
+    &__img-container {
+      aspect-ratio: 2.518 /1;
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .page-intro {
+    &__title {
+      padding-bottom: var(--space-xl);
+    }
+  }
+}

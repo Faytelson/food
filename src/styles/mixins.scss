@@ -1,0 +1,40 @@
+@mixin container {
+  width: 100%;
+  max-width: 1240px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: var(--space-m);
+  padding-right: var(--space-m);
+
+  @media screen and (min-width: 600px) {
+    padding-left: var(--space-l);
+    padding-right: var(--space-l);
+  }
+
+  @media screen and (min-width: 1024px) {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+
+  @media screen and (min-width: 1280px) {
+    padding-left: var(--space-xxl);
+    padding-right: var(--space-xxl);
+  }
+
+  @media screen and (min-width: 1440px) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* 599px и меньше --space-m */
+  /* 600px и выше; --space-l */
+  /* 1024px и выше; --space-xl */
+  /* 1280px и выше; --space-xxl */
+  /* 1440px и выше; --space-xxxl */
+}
+
+@mixin container-main {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1440px;
+}
