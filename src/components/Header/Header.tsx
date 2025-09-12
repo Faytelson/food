@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 // import { a } from "react-router-dom";
+import Logo from "@components/Logo";
+import Navbar from "@components/Navbar";
+import ButtonTool from "@components/ButtonTool";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
 
@@ -7,57 +10,69 @@ type HeaderProps = {
   className?: string;
 };
 
+export type Navlink = {
+  label: string;
+  href: string;
+};
+
+const navLinks: NavLink[] = [
+  { label: "Recipes", href: "/" },
+  { label: "Meals Categories", href: "/" },
+  { label: "Products", href: "/" },
+  { label: "Menu Items", href: "/" },
+  { label: "Meal Planning", href: "/" },
+];
+
 const Header: React.FC<HeaderProps> = ({ className }) => {
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+
+  const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
+  const closeNavbar = () => setIsNavbarOpen(false);
+
   return (
     <header className={clsx(styles.header, className)}>
-      <a
-        href="/"
-        className={styles["header__logo"]}
-      >
-        <img
-          src="/logo.svg"
-          alt="Logo"
-          className={styles["header__logo-img"]}
-        />
-        <p className={styles["header__logo-text"]}>MyApp</p>
-      </a>
+      <div className={styles["header__inner"]}>
+        <Logo className={styles["header__logo"]}>Food Client</Logo>
 
-      <nav className={styles["header__nav"]}>
-        <a
-          href="/"
-          className={styles["header__nav-item"]}
-        >
-          Recipes
-        </a>
-        <a
-          href="/"
-          className={styles["header__nav-item"]}
-        >
-          Meals Categories
-        </a>
-        <a
-          href="/"
-          className={styles["header__nav-item"]}
-        >
-          Products
-        </a>
-        <a
-          href="/"
-          className={styles["header__nav-item"]}
-        >
-          Menu Items
-        </a>
-        <a
-          href="/"
-          className={styles["header__nav-item"]}
-        >
-          Meal Planning
-        </a>
-      </nav>
+        <Navbar
+          className={clsx(
+            styles["header__navbar"],
+            isNavbarOpen ? styles["header__navbar_open"] : "",
+          )}
+          navLinks={navLinks}
+          onClick={closeNavbar}
+        ></Navbar>
 
-      <div className={styles["header__tools"]}>
-        <button className={styles["header__tool-btn"]}>🔍</button>
-        <button className={styles["header__tool-btn"]}>⚙️</button>
+        <div className={styles["header__tools"]}>
+          <ButtonTool
+            variant="favorite"
+            iconProps={{ width: 19, height: 19, color: "accent" }}
+            onClick={() => {
+              return "added to favorites";
+            }}
+          ></ButtonTool>
+          <ButtonTool
+            variant="profile"
+            iconProps={{ width: 24, height: 24, color: "accent" }}
+            onClick={() => {
+              return "open profile";
+            }}
+          ></ButtonTool>
+        </div>
+
+        <button
+          className={clsx(
+            styles["header__burger"],
+            isNavbarOpen ? styles["header__burger_active"] : "",
+          )}
+          type="button"
+          aria-label="Toggle navigation menu"
+          aria-controls="main-navigation"
+          aria-expanded={isNavbarOpen}
+          onClick={toggleNavbar}
+        >
+          <span className={styles["header__burger-line"]}></span>
+        </button>
       </div>
     </header>
   );

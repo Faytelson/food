@@ -38,3 +38,9 @@
   margin-left: auto;
   max-width: 1440px;
 }
+
+@mixin pseudo() {
+  content: "";
+  position: absolute;
+  display: block;
+}

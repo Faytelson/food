@@ -12,8 +12,8 @@ export type MainPageProps = {
 const MainPage: React.FC<MainPageProps> = ({ className }) => {
   return (
     <div className={clsx(className, styles["main-page"])}>
+      <Header></Header>
       <main className={styles["main-page__content"]}>
-        <Header></Header>
         <PageIntro image={foodPageIntro}>
           Find the perfect food and <a href="#">drink ideas</a> for every occasion, from{" "}
           <a href="#">weeknight dinners</a> to <a href="#">holiday feasts</a>.
