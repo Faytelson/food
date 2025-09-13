@@ -1,0 +1,33 @@
+.button {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 17px 20px;
+  font-family: "Roboto";
+  font-weight: var(--text-weight, 400);
+  font-size: 18px;
+  line-height: 100%;
+  color: var(--color-white);
+  background-color: var(--color-brand);
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+
+  &:not(.button_disabled):not(.button_loading):hover {
+    background-color: var(--color-brand-hover);
+  }
+
+  &:active {
+    background-color: var(--color-brand-active);
+  }
+
+  &_disabled,
+  &_disabled:hover {
+    background-color: var(--color-disabled);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

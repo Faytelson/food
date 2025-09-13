@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import MultiDropdown, { type Option } from "./MultiDropdown";
 import Card, { type CardProps } from "./Card";
+import Button from "./Button";
+import Pagination from "./Pagination";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
 
@@ -15,7 +17,7 @@ const fakeCards: CardProps[] = [
     title: "Delicious Pancakes with Maple Syrup",
     subtitle: "Fluffy pancakes topped with fresh fruits and a drizzle of maple syrup.",
     contentSlot: "Cook: 15 min",
-    actionSlot: <button>View Recipe</button>,
+    actionSlot: <Button>View Recipe</Button>,
     onClick: () => console.log("Card 1 clicked"),
   },
   {
@@ -24,7 +26,7 @@ const fakeCards: CardProps[] = [
     title: "Grilled Chicken Salad",
     subtitle: "Healthy salad with grilled chicken, mixed greens, cherry tomatoes, and vinaigrette.",
     contentSlot: "Cook: 20 min",
-    actionSlot: <button>View Recipe</button>,
+    actionSlot: <Button>View Recipe</Button>,
     onClick: () => console.log("Card 2 clicked"),
   },
   {
@@ -33,7 +35,7 @@ const fakeCards: CardProps[] = [
     title: "Spaghetti Carbonara",
     subtitle: "Classic Italian pasta with creamy sauce, pancetta, and parmesan cheese.",
     contentSlot: "Cook: 20 min",
-    actionSlot: <button>View Recipe</button>,
+    actionSlot: <Button>View Recipe</Button>,
     onClick: () => console.log("Card 3 clicked"),
   },
   {
@@ -42,7 +44,7 @@ const fakeCards: CardProps[] = [
     title: "Chocolate Lava Cake",
     subtitle: "Rich chocolate cake with a gooey molten center, perfect for chocolate lovers.",
     contentSlot: "Cook: 12 min",
-    actionSlot: <button>View Recipe</button>,
+    actionSlot: <Button>View Recipe</Button>,
     onClick: () => console.log("Card 4 clicked"),
   },
 ];
@@ -54,8 +56,11 @@ const categories: Option[] = [
   { key: "3", value: "Dinner" },
 ];
 
+const totalPages = 20;
+
 const RecipeSearchSection = ({ className }) => {
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const getTitle = (value: Option[]) => {
     if (value.length === 0) return "Select categories";
@@ -107,7 +112,11 @@ const RecipeSearchSection = ({ className }) => {
         </ul>
       </section>
 
-      <nav aria-label="Pagination"></nav>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={(page) => setCurrentPage(page)}
+      ></Pagination>
     </section>
   );
 };
