@@ -16,11 +16,11 @@ export type Navlink = {
 };
 
 const navLinks: NavLink[] = [
-  { label: "Recipes", href: "/" },
-  { label: "Meals Categories", href: "/" },
-  { label: "Products", href: "/" },
-  { label: "Menu Items", href: "/" },
-  { label: "Meal Planning", href: "/" },
+  { label: "Recipes", href: "/recipes" },
+  { label: "Meals Categories", href: "/meals-categories" },
+  { label: "Products", href: "/products" },
+  { label: "Menu Items", href: "/menu-items" },
+  { label: "Meal Planning", href: "/meal-planning" },
 ];
 
 const Header: React.FC<HeaderProps> = ({ className }) => {

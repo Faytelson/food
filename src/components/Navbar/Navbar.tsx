@@ -1,5 +1,6 @@
 import React from "react";
 import Text from "@components/Text";
+import { Link } from "react-router";
 import styles from "./Navbar.module.scss";
 import clsx from "clsx";
 
@@ -11,21 +12,16 @@ export type NavLink = {
 export type NavbarProps = {
   className?: string;
   navLinks: NavLink[];
-  onClick: () => void;
 };
 
-const Navbar = ({ className, navLinks, onClick }: NavbarProps) => {
+const Navbar = ({ className, navLinks }: NavbarProps) => {
   return (
     <nav className={clsx(className, styles.navbar)}>
       {navLinks.map((link) => (
-        <a
+        <Link
           key={link.label}
-          href={link.href}
+          to={link.href}
           className={styles["navbar__link"]}
-          onClick={(e) => {
-            e.preventDefault();
-            onClick();
-          }}
         >
           <Text
             className={styles["navbar__text"]}
@@ -35,7 +31,7 @@ const Navbar = ({ className, navLinks, onClick }: NavbarProps) => {
           >
             {link.label}
           </Text>
-        </a>
+        </Link>
       ))}
     </nav>
   );

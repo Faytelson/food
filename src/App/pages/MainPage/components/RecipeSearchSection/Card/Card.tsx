@@ -41,7 +41,7 @@ const Card: React.FC<CardProps> = ({
         <img
           src={image}
           alt="Карточка"
-          className="card__image"
+          className={styles["card__image"]}
         />
       </div>
 
@@ -84,12 +84,12 @@ const Card: React.FC<CardProps> = ({
 
         <footer className={styles["card__footer"]}>
           {contentSlot && (
-            <div className="card__content-slot">
+            <div className={styles["card__content-slot"]}>
               <Text
                 view="p-18"
                 tag="p"
                 weight="bold"
-                color="primary"
+                color="accent"
                 maxLines={3}
               >
                 {contentSlot}

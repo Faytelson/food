@@ -1,13 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MultiDropdown, { type Option } from "./MultiDropdown";
 import Card, { type CardProps } from "./Card";
 import Button from "./Button";
 import Pagination from "./Pagination";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
+import api from "@api/axios";
+import type { Recipe, RecipesResponse } from "@api/recipes";
 
 export type RecipeSearchSectionProps = {
   className?: string;
+};
+
+const getRecipes = async (page = 1, pageSize = 10): Promise<RecipesResponse> => {
+  const response = await api.get<RecipesResponse>("/recipes", {
+    params: {
+      populate: ["images"],
+      pagination: { page, pageSize },
+    },
+  });
+  return response.data;
 };
 
 const fakeCards: CardProps[] = [
@@ -56,11 +68,25 @@ const categories: Option[] = [
   { key: "3", value: "Dinner" },
 ];
 
-const totalPages = 20;
-
 const RecipeSearchSection = ({ className }) => {
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const data = await getRecipes(currentPage, 10);
+        setRecipes(data.data);
+        setTotalPages(data.meta.pagination.pageCount);
+      } catch (err) {
+        console.error("Failed to fetch recipes:", err);
+      }
+    };
+
+    fetchRecipes();
+  }, [currentPage]);
 
   const getTitle = (value: Option[]) => {
     if (value.length === 0) return "Select categories";
@@ -70,6 +96,20 @@ const RecipeSearchSection = ({ className }) => {
   const handleChange = (value: Option[]) => {
     setSelectedCategories(value);
   };
+
+  const recipeCards: CardProps[] = recipes.map((r) => {
+    const imageUrl = r.images?.[0]?.formats?.medium?.url || r.images?.[0]?.url;
+
+    return {
+      image: imageUrl,
+      captionSlot: r.totalTime,
+      title: r.name,
+      subtitle: r.summary,
+      contentSlot: r.calories,
+      actionSlot: <Button>Save</Button>,
+      onClick: () => console.log("Clicked", r.name),
+    };
+  });
 
   return (
     <section className={clsx(className, styles["recipe-search-section"])}>
@@ -91,7 +131,7 @@ const RecipeSearchSection = ({ className }) => {
 
       <section aria-labelledby="search-results">
         <ul className={styles["recipe-search-section__list"]}>
-          {fakeCards.map((card) => {
+          {recipeCards.map((card) => {
             return (
               <li
                 className={styles["recipe-search-section__item"]}

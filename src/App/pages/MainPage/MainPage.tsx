@@ -5,6 +5,7 @@ import RecipeSearchSection from "./components/RecipeSearchSection";
 import styles from "./MainPage.module.scss";
 import clsx from "clsx";
 import { introImages } from "./images";
+import { Link } from "react-router";
 
 export type MainPageProps = {
   className?: string;
@@ -16,8 +17,8 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
       <Header></Header>
       <main className={styles["main-page__content"]}>
         <IntroSection image={introImages}>
-          Find the perfect food and <a href="#">drink ideas</a> for every occasion, from{" "}
-          <a href="#">weeknight dinners</a> to <a href="#">holiday feasts</a>.
+          Find the perfect food and <Link to="/">drink ideas</Link> for every occasion, from{" "}
+          <Link to="/">weeknight dinners</Link> to <Link to="/">holiday feasts</Link>.
         </IntroSection>
         <RecipeSearchSection></RecipeSearchSection>
       </main>
