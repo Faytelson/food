@@ -1,0 +1,21 @@
+.recipe-intro-section {
+  display: flex;
+  flex-direction: column;
+  gap: 37px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__button-back {
+    flex-shrink: 0;
+  }
+
+  &__about {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: var(--space-xl);
+  }
+}

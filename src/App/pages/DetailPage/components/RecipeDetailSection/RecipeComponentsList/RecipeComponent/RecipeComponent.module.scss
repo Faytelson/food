@@ -1,0 +1,9 @@
+.recipe-component {
+  display: flex;
+  gap: 16px;
+
+  &__icon,
+  &__text {
+    flex-shrink: 0;
+  }
+}

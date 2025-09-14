@@ -1,6 +1,7 @@
 import React from "react";
 import Text from "@components/Text";
 import logoImg from "./logo_img.svg";
+import { Link } from "react-router";
 import styles from "./Logo.module.scss";
 import clsx from "clsx";
 
@@ -11,8 +12,8 @@ export type LogoProps = {
 
 const Logo = ({ className, children }: LogoProps) => {
   return (
-    <a
-      href="#"
+    <Link
+      to="/"
       className={clsx(className, styles["logo"])}
     >
       <img
@@ -29,7 +30,7 @@ const Logo = ({ className, children }: LogoProps) => {
       >
         {children}
       </Text>
-    </a>
+    </Link>
   );
 };
 

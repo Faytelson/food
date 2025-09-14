@@ -22,45 +22,6 @@ const getRecipes = async (page = 1, pageSize = 10): Promise<RecipesResponse> => 
   return response.data;
 };
 
-const fakeCards: CardProps[] = [
-  {
-    image: "https://i.ibb.co/8D5nMZZH/header.png",
-    captionSlot: "Breakfast",
-    title: "Delicious Pancakes with Maple Syrup",
-    subtitle: "Fluffy pancakes topped with fresh fruits and a drizzle of maple syrup.",
-    contentSlot: "Cook: 15 min",
-    actionSlot: <Button>View Recipe</Button>,
-    onClick: () => console.log("Card 1 clicked"),
-  },
-  {
-    image: "https://i.ibb.co/8D5nMZZH/header.png",
-    captionSlot: "Lunch",
-    title: "Grilled Chicken Salad",
-    subtitle: "Healthy salad with grilled chicken, mixed greens, cherry tomatoes, and vinaigrette.",
-    contentSlot: "Cook: 20 min",
-    actionSlot: <Button>View Recipe</Button>,
-    onClick: () => console.log("Card 2 clicked"),
-  },
-  {
-    image: "https://i.ibb.co/8D5nMZZH/header.png",
-    captionSlot: "Dinner",
-    title: "Spaghetti Carbonara",
-    subtitle: "Classic Italian pasta with creamy sauce, pancetta, and parmesan cheese.",
-    contentSlot: "Cook: 20 min",
-    actionSlot: <Button>View Recipe</Button>,
-    onClick: () => console.log("Card 3 clicked"),
-  },
-  {
-    image: "https://i.ibb.co/8D5nMZZH/header.png",
-    captionSlot: "Dessert",
-    title: "Chocolate Lava Cake",
-    subtitle: "Rich chocolate cake with a gooey molten center, perfect for chocolate lovers.",
-    contentSlot: "Cook: 12 min",
-    actionSlot: <Button>View Recipe</Button>,
-    onClick: () => console.log("Card 4 clicked"),
-  },
-];
-
 // test data
 const categories: Option[] = [
   { key: "1", value: "Breakfast" },
