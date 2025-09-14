@@ -19,7 +19,7 @@ const RecipeDirections: React.FC<RecipeDirectionsProps> = ({ items, className })
     <section className={clsx(styles.recipeDirections, className)}>
       <Text
         tag="h2"
-        view="p-24"
+        view="p-20"
         color="primary"
         weight="medium"
         className={styles["recipe-directions__title"]}

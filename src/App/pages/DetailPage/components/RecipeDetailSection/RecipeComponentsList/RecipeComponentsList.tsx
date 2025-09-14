@@ -12,9 +12,10 @@ type RecipeComponentListProps = {
   className?: string;
   title: string;
   items: RecipeComponentData[];
+  type: "ingredients" | "equipment";
 };
 
-const RecipeComponentList: React.FC<RecipeComponentListProps> = ({ className, title, items }) => {
+const RecipeComponentList: React.FC<RecipeComponentListProps> = ({ className, title, items, type }) => {
   return (
     <article className={clsx(className, styles["recipe-component-list"])}>
       <Text
@@ -28,11 +29,14 @@ const RecipeComponentList: React.FC<RecipeComponentListProps> = ({ className, ti
       </Text>
 
       <ul className={styles["recipe-component-list__items"]}>
-        <li className={styles["recipe-component-list__item"]}>
-          {items.map((item) => (
-            <RecipeComponent key={item}>{item}</RecipeComponent>
-          ))}
-        </li>
+        {items.map((item) => (
+          <li
+            key={item}
+            className={styles["recipe-component-list__item"]}
+          >
+            <RecipeComponent iconType={type}>{item}</RecipeComponent>
+          </li>
+        ))}
       </ul>
     </article>
   );

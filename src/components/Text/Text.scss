@@ -6,8 +6,8 @@
   &_view {
     &_title {
       font-weight: var(--text-weight, 700);
-      font-size: 44px;
-      line-height: 48px;
+      font-size: 24px;
+      line-height: 30px;
     }
 
     &_button {
@@ -52,6 +52,17 @@
 
     &_accent {
       color: var(--color-brand);
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .text {
+    &_view {
+      &_title {
+        font-size: 44px;
+        line-height: 48px;
+      }
     }
   }
 }

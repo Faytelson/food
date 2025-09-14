@@ -12,9 +12,10 @@ export type NavLink = {
 export type NavbarProps = {
   className?: string;
   navLinks: NavLink[];
+  onClick: () => void;
 };
 
-const Navbar = ({ className, navLinks }: NavbarProps) => {
+const Navbar = ({ className, navLinks, onClick }: NavbarProps) => {
   return (
     <nav className={clsx(className, styles.navbar)}>
       {navLinks.map((link) => (
@@ -22,6 +23,7 @@ const Navbar = ({ className, navLinks }: NavbarProps) => {
           key={link.label}
           to={link.href}
           className={styles["navbar__link"]}
+          onClick={onClick}
         >
           <Text
             className={styles["navbar__text"]}

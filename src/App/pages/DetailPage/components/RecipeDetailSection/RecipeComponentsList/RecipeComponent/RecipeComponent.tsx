@@ -1,22 +1,22 @@
 import React from "react";
 import Text from "@components/Text";
+import DishIcon from "@components/icons/IconDish";
+import LadleIcon from "@components/icons/LadleIcon";
 import styles from "./RecipeComponent.module.scss";
 import clsx from "clsx";
 
 type RecipeComponentProps = {
-  //   iconUrl?: string;
   children: React.ReactNode;
   className?: string;
+  iconType: string;
 };
 
-const RecipeComponent: React.FC<RecipeComponentProps> = ({ className, children }) => {
+const RecipeComponent: React.FC<RecipeComponentProps> = ({ className, iconType, children }) => {
   return (
     <div className={clsx(className, styles["recipe-component"])}>
-      <img
-        className={styles["recipe-component__icon"]}
-        src="https://i.ibb.co/jk2yjRKC/dish-tray-svgrepo-com-1.png"
-        alt="Icon"
-      />
+      {iconType === "ingredients" && <DishIcon className={styles["recipe-component__icon"]} />}
+      {iconType === "equipment" && <LadleIcon className={styles["recipe-component__icon"]} />}
+
       <Text
         className={styles["recipe-component__text"]}
         view="p-16"

@@ -26,6 +26,7 @@ const RecipeMetaItem: React.FC<RecipeMetaItemProps> = ({ className, term, descri
           tag="span"
           view="p-16"
           color="accent"
+          weight="medium"
         >
           {description}
         </Text>

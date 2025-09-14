@@ -3,12 +3,14 @@ import MultiDropdown, { type Option } from "./MultiDropdown";
 import Card, { type CardProps } from "./Card";
 import Button from "./Button";
 import Pagination from "./Pagination";
+import ClockIcon from "@components/icons/ClockIcon";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
 import { getRecipes } from "@api/recipes";
 import qs from "qs";
 import { useNavigate } from "react-router-dom";
+import { roundNum } from "@utils/roundNum";
 
 export type RecipeSearchSectionProps = {
   className?: string;
@@ -51,13 +53,25 @@ const RecipeSearchSection = ({ className }) => {
       try {
         const categoryIds = selectedCategories.map((c) => c.key);
 
-        const queryObj: QueryObj = { populate: ["images", "category"] };
+        const queryObj: QueryObj = {
+          populate: ["images", "category"],
+          pagination: {
+            page: currentPage,
+            pageSize: 9,
+          },
+        };
         if (categoryIds.length === 1) {
-          queryObj.filters = { category: { id: { $eq: categoryIds[0] } } };
+          queryObj.filters = {
+            category: { id: { $eq: categoryIds[0] } },
+          };
         } else if (categoryIds.length > 1) {
           const requests = categoryIds.map((id) => {
             const q = qs.stringify(
-              { populate: ["images", "category"], filters: { category: { id: { $eq: id } } } },
+              {
+                populate: ["images", "category"],
+                filters: { category: { id: { $eq: id } } },
+                pagination: { page: currentPage, pageSize: 9 },
+              },
               { encodeValuesOnly: true },
             );
             return getRecipes(`?${q}`);
@@ -81,61 +95,10 @@ const RecipeSearchSection = ({ className }) => {
     fetchRecipes();
   }, [currentPage, selectedCategories]);
 
-  // useEffect(() => {
-  //   const fetchRecipes = async () => {
-  //     try {
-  //       if (selectedCategories.length === 0) {
-  //         const query = qs.stringify({
-  //           populate: ["images", "category"],
-  //         });
-  //         const data = await getRecipes(`?${query}`);
-  //         setRecipes(data.data);
-  //         setTotalPages(data.meta.pagination.pageCount);
-
-  //         const raw = data.data.map((r) => [r.category.id, r.category.title]);
-  //         const options: Option[] = Array.from(new Map(raw).entries()).map(([key, value]) => ({
-  //           key,
-  //           value,
-  //         }));
-  //         setCategories(options);
-
-  //         return;
-  //       }
-
-  //       const requests = selectedCategories.map((cat) => {
-  //         const query = qs.stringify(
-  //           { populate: ["images", "category"], filters: { category: { id: { $eq: cat.key } } } },
-  //           { encodeValuesOnly: true },
-  //         );
-  //         return getRecipes(`?${query}`);
-  //       });
-
-  //       const responses = await Promise.all(requests);
-
-  //       const allRecipes = responses.flatMap((res) => res.data);
-  //       setRecipes(allRecipes);
-  //       setTotalPages(responses[0]?.meta.pagination.pageCount || 1);
-
-  //       const allOptions = Array.from(
-  //         new Map(
-  //           responses.flatMap((res) =>
-  //             res.data.map((r) => [r.category.id, r.category.title]),
-  //           ),
-  //         ).entries(),
-  //       ).map(([key, value]) => ({ key, value }));
-  //       setCategories(allOptions);
-  //     } catch (err) {
-  //       throw new Error(`Failed to fetch recipes: ${err}`);
-  //     }
-  //   };
-
-  //   fetchRecipes();
-  // }, [currentPage, selectedCategories]);
-
   const navigate = useNavigate();
 
   const getTitle = (value: Option[]) => {
-    if (value.length === 0) return "Select categories";
+    if (value.length === 0) return "Categories";
     return value.map((v) => v.value).join(", ");
   };
 
@@ -153,11 +116,21 @@ const RecipeSearchSection = ({ className }) => {
 
     return {
       image: imageData,
-      captionSlot: `${r.preparationTime} minutes`,
+      captionSlot: (
+        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <ClockIcon
+            width={15}
+            height={15}
+            color="accent"
+            style={{ position: "relative", top: "-1px" }}
+          />
+          {r.preparationTime} minutes
+        </span>
+      ),
       title: r.name,
       subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
-      contentSlot: r.calories,
-      actionSlot: <Button>Save</Button>,
+      contentSlot: <span>{roundNum(r.calories)} kcal</span>,
+      actionSlot: <Button onClick={(e) => e.stopPropagation()}>Save</Button>,
       onClick: () => navigate(`/recipes/${r.documentId}`),
     };
   });
@@ -189,6 +162,7 @@ const RecipeSearchSection = ({ className }) => {
                 key={card.title}
               >
                 <Card
+                  className={styles["recipe-search-section__card"]}
                   image={card.image}
                   captionSlot={card.captionSlot}
                   title={card.title}

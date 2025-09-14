@@ -24,17 +24,24 @@ const RecipeDetailSection: React.FC<RecipeDetailSectionProps> = ({
 }) => {
 
   return (
-    <section className={clsx(styles.recipeDetailSection, className)}>
+    <section className={clsx(styles["recipe-detail-section"], className)}>
       <RecipeComponentList
         title="Ingredients"
         items={ingredients}
+        className={styles["recipe-detail-section__ingredients"]}
+        type="ingredients"
       ></RecipeComponentList>
       <RecipeComponentList
         title="Equipment"
         items={equipments}
+        className={styles["recipe-detail-section__equipment"]}
+        type="equipment"
       ></RecipeComponentList>
 
-      <RecipeDirections items={directions} />
+      <RecipeDirections
+        items={directions}
+        className={styles["recipe-detail-section__directions"]}
+      />
     </section>
   );
 };

@@ -58,8 +58,11 @@ const RecipeIntroSection: React.FC<IntroSectionProps> = ({
             className={styles["recipe-intro-section__img"]}
           />
         </div>
-        <RecipeMetaList items={data}></RecipeMetaList>
-        <RecipeDescription content={summary}></RecipeDescription>
+        <RecipeMetaList
+          className={styles["recipe-intro-section__meta-list"]}
+          items={data}
+        ></RecipeMetaList>
+        <RecipeDescription className={styles["recipe-intro-section__description"]} content={summary}></RecipeDescription>
       </section>
     </section>
   );

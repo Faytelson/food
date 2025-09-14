@@ -8,4 +8,8 @@
     // column-count: 2;
     column-gap: 29px;
   }
+
+  &__item:not(:last-child) {
+    margin-bottom: 10px;
+  }
 }

@@ -1,13 +1,47 @@
+@use "@styles" as *;
+
 .recipe-detail-section {
   display: grid;
   grid-template-columns: 1fr;
-  row-gap: 57px;
-  //desktop
-  //   display: grid;
-  //   grid-template-columns: 1fr 1fr;
-  //   grid-template-rows: auto auto;
+  row-gap: var(--space-xl);
+}
 
-  //   & > .bottom {
-  //     grid-column: 1 / -1;
-  //   }
+@media screen and (min-width: 1024px) {
+  .recipe-detail-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+
+    &__ingredients {
+      position: relative;
+
+      &::after {
+        @include pseudo;
+        bottom: 0;
+        right: 0;
+        height: calc(100% - 12px);
+        width: 2px;
+        background-color: var(--color-brand);
+      }
+
+      &::before {
+        @include pseudo;
+        top: 0;
+        right: -3px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: var(--color-brand);
+      }
+    }
+
+    &__equipment {
+      margin-left: 53px;
+    }
+
+    &__directions {
+      grid-column: 1 / -1;
+      max-width: 737px;
+    }
+  }
 }

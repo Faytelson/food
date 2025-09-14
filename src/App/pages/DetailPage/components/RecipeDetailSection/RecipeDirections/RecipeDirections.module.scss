@@ -1,5 +1,9 @@
-.recipe-direction {
+.recipe-directions {
   &__title {
     margin-bottom: var(--space-m);
+  }
+
+  &__item {
+    margin-bottom: 16px;
   }
 }

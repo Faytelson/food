@@ -4,5 +4,8 @@
   background-color: var(--color-main-background);
   padding-top: 49px;
   padding-bottom: 53px;
-  @include container;
+
+  &__inner {
+    @include container;
+  }
 }

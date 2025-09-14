@@ -28,11 +28,11 @@ const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
         setRecipe(recipe);
 
         setRecipeMeta([
-          { term: "Preparation", description: recipe.preparationTime ?? "—" },
-          { term: "Cooking", description: recipe.cookingTime ?? "—" },
-          { term: "Total", description: recipe.totalTime ?? "—" },
+          { term: "Preparation", description: `${recipe.preparationTime ?? "—"} minutes` },
+          { term: "Cooking", description: `${recipe.cookingTime ?? "—"} minutes` },
+          { term: "Total", description: `${recipe.totalTime ?? "—"} minutes` },
           { term: "Likes", description: recipe.likes ?? "—" },
-          { term: "Servings", description: recipe.servings ?? "—" },
+          { term: "Servings", description: `${recipe.servings ?? "—"} servings` },
           { term: "Rating", description: recipe.rating ? `${recipe.rating}/5` : "—" },
         ]);
 
@@ -64,17 +64,19 @@ const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
 
   return (
     <div className={clsx(styles["detail-page"], className)}>
-      <RecipeIntroSection
-        title={recipe.name}
-        image={recipe.images[0]}
-        data={recipeMeta}
-        summary={<span dangerouslySetInnerHTML={{ __html: recipe.summary }} />}
-      />
-      <RecipeDetailSection
-        ingredients={ingredients}
-        equipments={equipments}
-        directions={directions}
-      ></RecipeDetailSection>
+      <div className={styles["detail-page__inner"]}>
+        <RecipeIntroSection
+          title={recipe.name}
+          image={recipe.images[0]}
+          data={recipeMeta}
+          summary={<span dangerouslySetInnerHTML={{ __html: recipe.summary }} />}
+        />
+        <RecipeDetailSection
+          ingredients={ingredients}
+          equipments={equipments}
+          directions={directions}
+        ></RecipeDetailSection>
+      </div>
     </div>
   );
 };
