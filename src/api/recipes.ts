@@ -1,15 +1,9 @@
-// src/api/recipes.ts
 import api from "./axios";
 
 export type RecipeImage = {
   id: number;
   name: string;
   url: string;
-  formats?: {
-    small?: { url: string };
-    medium?: { url: string };
-    thumbnail?: { url: string };
-  };
 };
 
 export type Recipe = {
@@ -43,12 +37,7 @@ export type RecipesResponse = {
   };
 };
 
-export const getRecipes = async (page = 1, pageSize = 10): Promise<RecipesResponse> => {
-  const response = await api.get<RecipesResponse>("/recipes", {
-    params: {
-      populate: ["images"],
-      pagination: { page, pageSize },
-    },
-  });
+export const getRecipes = async (query = ""): Promise<RecipesResponse> => {
+  const response = await api.get<RecipesResponse>(`/recipes${query}`);
   return response.data;
 };

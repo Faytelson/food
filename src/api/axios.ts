@@ -2,10 +2,7 @@ import axios from "axios";
 import type { AxiosInstance } from "axios";
 import qs from "qs";
 
-const BASE_URL =
-  import.meta.env.VITE_API_BASE ??
-  (process.env.REACT_APP_API_BASE as string) ??
-  "https://front-school-strapi.ktsdev.ru/api";
+const BASE_URL = import.meta.env.VITE_API_BASE ?? "https://front-school-strapi.ktsdev.ru/api";
 const TOKEN = import.meta.env.VITE_API_TOKEN;
 
 const api: AxiosInstance = axios.create({

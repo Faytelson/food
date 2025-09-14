@@ -5,67 +5,154 @@ import Button from "./Button";
 import Pagination from "./Pagination";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
-import api from "@api/axios";
-import type { Recipe, RecipesResponse } from "@api/recipes";
+import type { Recipe } from "@api/recipes";
+import { getRecipes } from "@api/recipes";
+import qs from "qs";
 
 export type RecipeSearchSectionProps = {
   className?: string;
 };
 
-const getRecipes = async (page = 1, pageSize = 10): Promise<RecipesResponse> => {
-  const response = await api.get<RecipesResponse>("/recipes", {
-    params: {
-      populate: ["images"],
-      pagination: { page, pageSize },
-    },
-  });
-  return response.data;
+export type QueryObj = {
+  populate: string[];
+  filters?: Record<string, Record<string, Record<string, string | number>>>;
 };
 
-// test data
-const categories: Option[] = [
-  { key: "1", value: "Breakfast" },
-  { key: "2", value: "Lunch" },
-  { key: "3", value: "Dinner" },
-];
-
 const RecipeSearchSection = ({ className }) => {
+  const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const query = qs.stringify({ populate: ["category"] });
+        const data = await getRecipes(`?${query}`);
+
+        const raw = data.data.map((r) => [r.category.id, r.category.title]);
+        const options: Option[] = Array.from(new Map(raw).entries()).map(([key, value]) => ({
+          key,
+          value,
+        }));
+        setCategories(options);
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const data = await getRecipes(currentPage, 10);
+        const categoryIds = selectedCategories.map((c) => c.key);
+
+        const queryObj: QueryObj = { populate: ["images", "category"] };
+        if (categoryIds.length === 1) {
+          queryObj.filters = { category: { id: { $eq: categoryIds[0] } } };
+        } else if (categoryIds.length > 1) {
+          const requests = categoryIds.map((id) => {
+            const q = qs.stringify(
+              { populate: ["images", "category"], filters: { category: { id: { $eq: id } } } },
+              { encodeValuesOnly: true },
+            );
+            return getRecipes(`?${q}`);
+          });
+          const responses = await Promise.all(requests);
+          const allRecipes = responses.flatMap((res) => res.data);
+          setRecipes(allRecipes);
+          setTotalPages(responses[0]?.meta.pagination.pageCount || 1);
+          return;
+        }
+
+        const query = qs.stringify(queryObj, { encodeValuesOnly: true });
+        const data = await getRecipes(`?${query}`);
         setRecipes(data.data);
-        setTotalPages(data.meta.pagination.pageCount);
+        setTotalPages(data.meta.pagination.pageCount || 1);
       } catch (err) {
         console.error("Failed to fetch recipes:", err);
       }
     };
 
     fetchRecipes();
-  }, [currentPage]);
+  }, [currentPage, selectedCategories]);
+
+  // useEffect(() => {
+  //   const fetchRecipes = async () => {
+  //     try {
+  //       if (selectedCategories.length === 0) {
+  //         const query = qs.stringify({
+  //           populate: ["images", "category"],
+  //         });
+  //         const data = await getRecipes(`?${query}`);
+  //         setRecipes(data.data);
+  //         setTotalPages(data.meta.pagination.pageCount);
+
+  //         const raw = data.data.map((r) => [r.category.id, r.category.title]);
+  //         const options: Option[] = Array.from(new Map(raw).entries()).map(([key, value]) => ({
+  //           key,
+  //           value,
+  //         }));
+  //         setCategories(options);
+
+  //         return;
+  //       }
+
+  //       const requests = selectedCategories.map((cat) => {
+  //         const query = qs.stringify(
+  //           { populate: ["images", "category"], filters: { category: { id: { $eq: cat.key } } } },
+  //           { encodeValuesOnly: true },
+  //         );
+  //         return getRecipes(`?${query}`);
+  //       });
+
+  //       const responses = await Promise.all(requests);
+
+  //       const allRecipes = responses.flatMap((res) => res.data);
+  //       setRecipes(allRecipes);
+  //       setTotalPages(responses[0]?.meta.pagination.pageCount || 1);
+
+  //       const allOptions = Array.from(
+  //         new Map(
+  //           responses.flatMap((res) =>
+  //             res.data.map((r) => [r.category.id, r.category.title]),
+  //           ),
+  //         ).entries(),
+  //       ).map(([key, value]) => ({ key, value }));
+  //       setCategories(allOptions);
+  //     } catch (err) {
+  //       throw new Error(`Failed to fetch recipes: ${err}`);
+  //     }
+  //   };
+
+  //   fetchRecipes();
+  // }, [currentPage, selectedCategories]);
 
   const getTitle = (value: Option[]) => {
     if (value.length === 0) return "Select categories";
     return value.map((v) => v.value).join(", ");
   };
 
-  const handleChange = (value: Option[]) => {
+  const handleCategoryChange = (value: Option[]) => {
     setSelectedCategories(value);
+    setCurrentPage(1);
   };
 
   const recipeCards: CardProps[] = recipes.map((r) => {
-    const imageUrl = r.images?.[0]?.formats?.medium?.url || r.images?.[0]?.url;
+    const imageData = {
+      url: r.images?.[0]?.url,
+      alt: r.images?.[0]?.name,
+      id: r.images?.[0]?.id,
+    };
 
     return {
-      image: imageUrl,
-      captionSlot: r.totalTime,
+      image: imageData,
+      captionSlot: `${r.preparationTime} minutes`,
       title: r.name,
-      subtitle: r.summary,
+      subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
       contentSlot: r.calories,
       actionSlot: <Button>Save</Button>,
       onClick: () => console.log("Clicked", r.name),
@@ -84,7 +171,7 @@ const RecipeSearchSection = ({ className }) => {
           <MultiDropdown
             options={categories}
             value={selectedCategories}
-            onChange={handleChange}
+            onChange={handleCategoryChange}
             getTitle={getTitle}
           ></MultiDropdown>
         </div>

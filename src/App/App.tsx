@@ -1,8 +1,8 @@
 import "./App.css";
 import { Routes, Route } from "react-router";
 import Layout from "./components/Layout";
-// import MainPage from "@app/pages/MainPage";
-import DetailPage from "@app/pages/DetailPage";
+import MainPage from "@app/pages/MainPage";
+// import DetailPage from "@app/pages/DetailPage";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <Route element={<Layout />}>
           <Route
             path="/"
-            element={<DetailPage />}
+            element={<MainPage />}
           ></Route>
           <Route
             path="/detail"

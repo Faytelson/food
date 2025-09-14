@@ -3,11 +3,17 @@ import Text from "@components/Text";
 import styles from "./Card.module.scss";
 import clsx from "clsx";
 
+export type CardImage = {
+  url: string;
+  alt: string;
+  id: number;
+};
+
 export type CardProps = {
   /** Дополнительный classname */
   className?: string;
   /** URL изображения */
-  image: string;
+  image: CardImage;
   /** Слот над заголовком */
   captionSlot?: React.ReactNode;
   /** Заголовок карточки */
@@ -39,8 +45,8 @@ const Card: React.FC<CardProps> = ({
     >
       <div className={styles["card__image-section"]}>
         <img
-          src={image}
-          alt="Карточка"
+          src={image.url}
+          alt={image.alt}
           className={styles["card__image"]}
         />
       </div>
