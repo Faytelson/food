@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router";
 import Layout from "./components/Layout";
 import MainPage from "@app/pages/MainPage";
-// import DetailPage from "@app/pages/DetailPage";
+import DetailPage from "@app/pages/DetailPage";
 
 function App() {
   return (
@@ -14,9 +14,9 @@ function App() {
             element={<MainPage />}
           ></Route>
           <Route
-            path="/detail"
-            element={<div>element detail-page</div>}
-          ></Route>
+            path="/recipes/:documentId"
+            element={<DetailPage />}
+          />
           <Route
             path="/recipes"
             element={<div>element Recipes</div>}

@@ -1,4 +1,5 @@
 import api from "./axios";
+import qs from "qs";
 
 export type RecipeImage = {
   id: number;
@@ -39,5 +40,17 @@ export type RecipesResponse = {
 
 export const getRecipes = async (query = ""): Promise<RecipesResponse> => {
   const response = await api.get<RecipesResponse>(`/recipes${query}`);
+  return response.data;
+};
+
+export const getRecipeByDocumentId = async (documentId: string) => {
+  const query = qs.stringify(
+    {
+      populate: ["ingradients", "equipments", "directions.image", "images", "category"],
+    },
+    { encodeValuesOnly: true },
+  );
+
+  const response = await api.get(`/recipes/${documentId}?${query}`);
   return response.data;
 };

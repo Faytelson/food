@@ -8,6 +8,7 @@ import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
 import { getRecipes } from "@api/recipes";
 import qs from "qs";
+import { useNavigate } from "react-router-dom";
 
 export type RecipeSearchSectionProps = {
   className?: string;
@@ -131,6 +132,8 @@ const RecipeSearchSection = ({ className }) => {
   //   fetchRecipes();
   // }, [currentPage, selectedCategories]);
 
+  const navigate = useNavigate();
+
   const getTitle = (value: Option[]) => {
     if (value.length === 0) return "Select categories";
     return value.map((v) => v.value).join(", ");
@@ -155,7 +158,7 @@ const RecipeSearchSection = ({ className }) => {
       subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
       contentSlot: r.calories,
       actionSlot: <Button>Save</Button>,
-      onClick: () => console.log("Clicked", r.name),
+      onClick: () => navigate(`/recipes/${r.documentId}`),
     };
   });
 
