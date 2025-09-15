@@ -1,0 +1,48 @@
+.pagination {
+  width: 100%;
+
+  &__list {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__button-prev,
+  &__button-next,
+  &__button {
+    width: 38px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  &__button-prev {
+    margin-right: 15px;
+  }
+
+  &__button-next {
+    margin-left: 15px;
+  }
+
+  &__button {
+    font-family: "Roboto";
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 122%;
+    color: var(--text-primary);
+    background-color: transparent;
+    transition: all 0.1s linear;
+
+    &:hover:not(.pagination__button_active) {
+      background-color: var(--color-brand-hover);
+    }
+
+    &_active {
+      color: var(--color-white);
+      background-color: var(--color-brand);
+    }
+  }
+}

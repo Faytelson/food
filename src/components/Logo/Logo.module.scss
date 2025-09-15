@@ -1,0 +1,22 @@
+.logo {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+
+  &__img {
+    width: 36px;
+    height: 36px;
+  }
+
+  &__text {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .logo {
+    &__text {
+      display: block;
+    }
+  }
+}

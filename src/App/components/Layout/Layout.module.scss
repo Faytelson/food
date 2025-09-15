@@ -1,0 +1,6 @@
+@use "@styles" as *;
+
+.app-layout {
+  @include container-main;
+  padding-top: var(--header-height);
+}

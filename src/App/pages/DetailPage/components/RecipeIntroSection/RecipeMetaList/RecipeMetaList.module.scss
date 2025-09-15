@@ -1,0 +1,10 @@
+.recipe-meta-list {
+  width: 100%;
+  max-width: 100%;
+  max-width: 463px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 50px;
+  align-items: center;
+  align-content: center;
+}

@@ -1,0 +1,11 @@
+@use "@styles" as *;
+
+.detail-page {
+  background-color: var(--color-main-background);
+  padding-top: 49px;
+  padding-bottom: 53px;
+
+  &__inner {
+    @include container;
+  }
+}

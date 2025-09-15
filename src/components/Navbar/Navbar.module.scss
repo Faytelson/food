@@ -1,0 +1,19 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  column-gap: 16px;
+
+  &__link {
+    color: var(--color-text-primary);
+    transition: all var(--transition-main);
+
+    &:hover {
+      color: var(--color-brand-hover);
+    }
+
+    &_active,
+    &_active:hover {
+      color: var(--color-brand);
+    }
+  }
+}

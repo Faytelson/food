@@ -1,0 +1,64 @@
+.card {
+  width: 100%;
+  max-width: 360px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: var(--color-white);
+
+  &:hover {
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  &__image-section {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    inset: 0;
+    object-fit: cover;
+  }
+
+  &__content-section {
+    padding: 24px 12px;
+    background-color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  &__caption-slot {
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    margin-bottom: 8px;
+  }
+
+  &__subtitle {
+    margin-bottom: 20px;
+  }
+
+  &__footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    justify-self: flex-end;
+    margin-top: auto;
+  }
+
+  &__content-slot {
+    font-family: "Roboto";
+  }
+
+  &__action-slot {
+    margin-left: auto;
+  }
+}

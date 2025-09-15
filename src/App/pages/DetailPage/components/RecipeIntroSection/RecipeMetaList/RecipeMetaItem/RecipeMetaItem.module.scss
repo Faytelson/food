@@ -1,0 +1,11 @@
+.recipe-meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xxs);
+
+  &__term,
+  &__description {
+    text-align: center;
+  }
+}

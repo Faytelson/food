@@ -1,0 +1,15 @@
+.recipe-component-list {
+  &__title {
+    margin-bottom: var(--space-m);
+  }
+
+  &__items {
+    column-count: 1;
+    // column-count: 2;
+    column-gap: 29px;
+  }
+
+  &__item:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
