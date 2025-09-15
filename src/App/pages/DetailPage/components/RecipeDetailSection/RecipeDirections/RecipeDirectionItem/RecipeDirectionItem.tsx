@@ -15,7 +15,7 @@ const RecipeDirectionItem: React.FC<RecipeDirectionItemProps> = ({ title, conten
       <Text
         className={styles["recipe-direction-item__title"]}
         tag="h4"
-        view="p-20"
+        view="p-16"
         color="primary"
         weight="medium"
       >

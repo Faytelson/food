@@ -16,7 +16,7 @@ export type Navlink = {
 };
 
 const navLinks: NavLink[] = [
-  { label: "Recipes", href: "/recipes" },
+  { label: "Recipes", href: "/" },
   { label: "Meals Categories", href: "/meals-categories" },
   { label: "Products", href: "/products" },
   { label: "Menu Items", href: "/menu-items" },

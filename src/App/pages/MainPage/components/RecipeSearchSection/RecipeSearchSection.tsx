@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MultiDropdown, { type Option } from "./MultiDropdown";
+import InputDropdown from "./InputDropdown";
+import SearchInput from "./SearchInput";
 import Card, { type CardProps } from "./Card";
 import Button from "./Button";
 import Pagination from "./Pagination";
@@ -16,95 +17,194 @@ export type RecipeSearchSectionProps = {
   className?: string;
 };
 
+export type QueryFilters = {
+  category?: {
+    id: { $eq: number };
+  };
+  name?: {
+    $containsi: string;
+  };
+};
+
 export type QueryObj = {
   populate: string[];
-  filters?: Record<string, Record<string, Record<string, string | number>>>;
+  pagination?: {
+    page: number;
+    pageSize: number;
+  };
+  filters?: QueryFilters;
+};
+
+export type FetchParams = {
+  categoryId?: number;
+  searchQuery?: string;
+  page?: number;
+  populate: string[];
+};
+
+const fetchRecipes = async ({ categoryId, searchQuery, page = 1, populate }: FetchParams) => {
+  const queryObj: QueryObj = {
+    populate: populate,
+    pagination: {
+      page,
+      pageSize: 9,
+    },
+  };
+
+  if (categoryId || searchQuery) {
+    queryObj.filters = {};
+  }
+
+  if (categoryId) {
+    queryObj.filters = {
+      ...queryObj.filters,
+      category: { id: { $eq: categoryId } },
+    };
+  }
+
+  if (searchQuery) {
+    queryObj.filters = {
+      ...queryObj.filters,
+      name: { $containsi: searchQuery },
+    };
+  }
+
+  const query = qs.stringify(queryObj, { encodeValuesOnly: true });
+  return getRecipes(`?${query}`);
 };
 
 const RecipeSearchSection = ({ className }) => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState<Option[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Option>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  // инпут
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchInitial = async () => {
       try {
-        const query = qs.stringify({ populate: ["category"] });
-        const data = await getRecipes(`?${query}`);
+        const data = await fetchRecipes({ populate: ["images", "category"] });
 
-        const raw = data.data.map((r) => [r.category.id, r.category.title]);
+        // set recipes
+        setRecipes(data.data);
+        // set categories
+        const raw = data.data
+          .filter((r) => r.category)
+          .map((r) => [r.category.id, r.category.title]);
         const options: Option[] = Array.from(new Map(raw).entries()).map(([key, value]) => ({
           key,
           value,
         }));
         setCategories(options);
-      } catch (err) {
-        console.error("Failed to fetch categories:", err);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const categoryIds = selectedCategories.map((c) => c.key);
-
-        const queryObj: QueryObj = {
-          populate: ["images", "category"],
-          pagination: {
-            page: currentPage,
-            pageSize: 9,
-          },
-        };
-        if (categoryIds.length === 1) {
-          queryObj.filters = {
-            category: { id: { $eq: categoryIds[0] } },
-          };
-        } else if (categoryIds.length > 1) {
-          const requests = categoryIds.map((id) => {
-            const q = qs.stringify(
-              {
-                populate: ["images", "category"],
-                filters: { category: { id: { $eq: id } } },
-                pagination: { page: currentPage, pageSize: 9 },
-              },
-              { encodeValuesOnly: true },
-            );
-            return getRecipes(`?${q}`);
-          });
-          const responses = await Promise.all(requests);
-          const allRecipes = responses.flatMap((res) => res.data);
-          setRecipes(allRecipes);
-          setTotalPages(responses[0]?.meta.pagination.pageCount || 1);
-          return;
-        }
-
-        const query = qs.stringify(queryObj, { encodeValuesOnly: true });
-        const data = await getRecipes(`?${query}`);
-        setRecipes(data.data);
+        // set pages
         setTotalPages(data.meta.pagination.pageCount || 1);
       } catch (err) {
-        console.error("Failed to fetch recipes:", err);
+        throw new Error(`Failed to fetch: ${err}`);
       }
     };
 
-    fetchRecipes();
-  }, [currentPage, selectedCategories]);
+    fetchInitial();
+  }, []);
+
+  // useEffect(() => {
+  //   const fetchRecipes = async () => {
+  //     try {
+  //       const categoryIds = selectedCategories.map((c) => c.key);
+
+  //       const queryObj: QueryObj = {
+  //         populate: ["images", "category"],
+  //         pagination: {
+  //           page: currentPage,
+  //           pageSize: 9,
+  //         },
+  //       };
+  //       if (categoryIds.length === 1) {
+  //         queryObj.filters = {
+  //           category: { id: { $eq: categoryIds[0] } },
+  //         };
+  //       } else if (categoryIds.length > 1) {
+  //         const requests = categoryIds.map((id) => {
+  //           const q = qs.stringify(
+  //             {
+  //               populate: ["images", "category"],
+  //               filters: { category: { id: { $eq: id } } },
+  //               pagination: { page: currentPage, pageSize: 9 },
+  //             },
+  //             { encodeValuesOnly: true },
+  //           );
+  //           return getRecipes(`?${q}`);
+  //         });
+  //         const responses = await Promise.all(requests);
+  //         const allRecipes = responses.flatMap((res) => res.data);
+  //         setRecipes(allRecipes);
+  //         setTotalPages(responses[0]?.meta.pagination.pageCount || 1);
+  //         return;
+  //       }
+
+  //       const query = qs.stringify(queryObj, { encodeValuesOnly: true });
+  //       const data = await getRecipes(`?${query}`);
+  //       setRecipes(data.data);
+  //       setTotalPages(data.meta.pagination.pageCount || 1);
+  //     } catch (err) {
+  //       throw new Error(`Failed to fetch recipes: ${err}`);
+  //     }
+  //   };
+
+  //   fetchRecipes();
+  // }, [currentPage, selectedCategories]);
 
   const navigate = useNavigate();
 
-  const getTitle = (value: Option[]) => {
-    if (value.length === 0) return "Categories";
-    return value.map((v) => v.value).join(", ");
+  const getTitle = (option: Option | null) => {
+    return option ? option.value : "Categories";
   };
 
-  const handleCategoryChange = (value: Option[]) => {
-    setSelectedCategories(value);
+  const updateRecipes = async (params: {
+    categoryId?: number;
+    searchQuery?: string;
+    page?: number;
+  }) => {
+    try {
+      const data = await fetchRecipes({
+        categoryId: params.categoryId,
+        searchQuery: params.searchQuery,
+        page: params.page ?? 1,
+        populate: ["images", "category"],
+      });
+
+      setRecipes(data.data);
+      setTotalPages(data.meta.pagination.pageCount || 1);
+    } catch (err) {
+      throw new Error(`Failed to fetch: ${err}`);
+    }
+  };
+
+  const handleCategoryChange = (category: Option) => {
+    if (category === null) {
+      setSelectedCategory(null);
+      updateRecipes({ categoryId: undefined, searchQuery, page: 1 });
+      setCurrentPage(1);
+      return;
+    }
+    setSelectedCategory(category);
+    const categoryId = Number(category.key);
+    updateRecipes({ categoryId, searchQuery, page: 1 });
     setCurrentPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchInput(value);
+    setSearchQuery(value);
+    updateRecipes({ categoryId: selectedCategory?.key, searchQuery: value, page: 1 });
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    updateRecipes({ categoryId: selectedCategory?.key, searchQuery, page });
   };
 
   const recipeCards: CardProps[] = recipes.map((r) => {
@@ -142,14 +242,21 @@ const RecipeSearchSection = ({ className }) => {
         aria-label="Recipe search"
         className={styles["recipe-search-section__form"]}
       >
-        <div className={styles["recipe-search-section__search"]}>{/* здесь будет поиск */}</div>
+        <div className={styles["recipe-search-section__search"]}>
+          {
+            <SearchInput
+              value={searchInput}
+              onChange={handleSearchChange}
+            ></SearchInput>
+          }
+        </div>
         <div className={styles["recipe-search-section__categories"]}>
-          <MultiDropdown
+          <InputDropdown
             options={categories}
-            value={selectedCategories}
+            value={selectedCategory}
             onChange={handleCategoryChange}
             getTitle={getTitle}
-          ></MultiDropdown>
+          ></InputDropdown>
         </div>
       </form>
 
@@ -180,7 +287,7 @@ const RecipeSearchSection = ({ className }) => {
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
-        onPageChange={(page) => setCurrentPage(page)}
+        onPageChange={handlePageChange}
       ></Pagination>
     </section>
   );

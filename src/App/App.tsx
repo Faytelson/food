@@ -18,10 +18,6 @@ function App() {
             element={<DetailPage />}
           />
           <Route
-            path="/recipes"
-            element={<div>element Recipes</div>}
-          ></Route>
-          <Route
             path="/meals-categories"
             element={<div>element Meals Categories</div>}
           ></Route>

@@ -34,7 +34,11 @@
     line-height: 122%;
     color: var(--text-primary);
     background-color: transparent;
-    transition: all .1s linear;
+    transition: all 0.1s linear;
+
+    &:hover:not(.pagination__button_active) {
+      background-color: var(--color-brand-hover);
+    }
 
     &_active {
       color: var(--color-white);
