@@ -27,6 +27,11 @@ export type Direction = {
   content: string;
 };
 
+export type DirectionText = {
+  id: number;
+  description: string;
+};
+
 const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
   const { documentId } = useParams<{ documentId: string }>();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -61,13 +66,12 @@ const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
 
         setEquipments(recipe.equipments.map((e: EquipmentItem) => e.name));
 
-        const directionsList = recipe.directions.map((d: Direction, index: number) => ({
+        const directionsList = recipe.directions.map((d: DirectionText, index: number) => ({
           title: `Step ${index + 1}`,
           content: d.description,
         }));
 
         setDirections(directionsList);
-        // setSummary(recipe.summary);
       } catch (err) {
         throw new Error(`Failed to fetch recipe: ${err}`);
       } finally {

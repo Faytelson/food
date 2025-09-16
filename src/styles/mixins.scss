@@ -32,13 +32,6 @@
   /* 1440px и выше; --space-xxxl */
 }
 
-@mixin container-main {
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  max-width: 1920px;
-}
-
 @mixin pseudo() {
   content: "";
   position: absolute;

@@ -5,6 +5,7 @@ import Card, { type CardProps } from "./Card";
 import Button from "./Button";
 import Pagination from "./Pagination";
 import ClockIcon from "@components/icons/ClockIcon";
+import { Link } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
@@ -73,7 +74,7 @@ const fetchRecipes = async ({ categoryId, searchQuery, page = 1, populate }: Fet
 };
 
 const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) => {
-  const [categories, setCategories] = useState <Option []>([]);
+  const [categories, setCategories] = useState<Option[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -105,8 +106,6 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
 
     fetchInitial();
   }, []);
-
-  const navigate = useNavigate();
 
   const getTitle = (option: Option | null) => {
     return option ? option.value : "Categories";
@@ -181,7 +180,7 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
       subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
       contentSlot: <span>{Math.round(r.calories)} kcal</span>,
       actionSlot: <Button onClick={(e) => e.stopPropagation()}>Save</Button>,
-      onClick: () => navigate(`/recipes/${r.documentId}`),
+      documentId: r.documentId,
     };
   });
 
@@ -218,16 +217,17 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
                 className={styles["recipe-search-section__item"]}
                 key={card.title}
               >
-                <Card
-                  className={styles["recipe-search-section__card"]}
-                  image={card.image}
-                  captionSlot={card.captionSlot}
-                  title={card.title}
-                  subtitle={card.subtitle}
-                  contentSlot={card.contentSlot}
-                  onClick={card.onClick}
-                  actionSlot={card.actionSlot}
-                ></Card>
+                <Link to={`/recipes/${card.documentId}`}>
+                  <Card
+                    className={styles["recipe-search-section__card"]}
+                    image={card.image}
+                    captionSlot={card.captionSlot}
+                    title={card.title}
+                    subtitle={card.subtitle}
+                    contentSlot={card.contentSlot}
+                    actionSlot={card.actionSlot}
+                  ></Card>
+                </Link>
               </li>
             );
           })}

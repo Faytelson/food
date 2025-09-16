@@ -16,7 +16,6 @@ export type CardProps = {
   title: string;
   subtitle: React.ReactNode;
   contentSlot?: React.ReactNode;
-  onClick?: React.MouseEventHandler;
   actionSlot?: React.ReactNode;
 };
 
@@ -27,13 +26,11 @@ const Card: React.FC<CardProps> = ({
   title,
   subtitle,
   contentSlot,
-  onClick,
   actionSlot,
 }) => {
   return (
     <article
       className={clsx(styles.card, className)}
-      onClick={onClick}
     >
       <div className={styles["card__image-section"]}>
         <img
