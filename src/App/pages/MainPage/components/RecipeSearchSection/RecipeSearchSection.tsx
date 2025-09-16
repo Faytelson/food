@@ -11,7 +11,6 @@ import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
 import { getRecipes } from "@api/recipes";
 import qs from "qs";
-import { useNavigate } from "react-router-dom";
 
 export type RecipeSearchSectionProps = {
   className?: string;
@@ -41,6 +40,8 @@ export type FetchParams = {
   page?: number;
   populate: string[];
 };
+
+type CardWithId = CardProps & { documentId: string };
 
 const fetchRecipes = async ({ categoryId, searchQuery, page = 1, populate }: FetchParams) => {
   const queryObj: QueryObj = {
@@ -156,7 +157,7 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
     updateRecipes({ categoryId: selectedCategory?.key, searchQuery, page });
   };
 
-  const recipeCards: CardProps[] = recipes.map((r) => {
+  const recipeCards: CardWithId[] = recipes.map((r) => {
     const imageData = {
       url: r.images?.[0]?.url ?? "",
       alt: r.images?.[0]?.name ?? "Recipe Image",
