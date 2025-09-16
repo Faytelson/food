@@ -3,15 +3,8 @@ import Text from "@components/Text";
 import styles from "./IntroSection.module.scss";
 import clsx from "clsx";
 
-export type ImageVariant = {
-  avif?: string;
-  webp?: string;
-  fallback: string;
-};
-
 export type IntroImage = {
-  sm: ImageVariant;
-  lg: ImageVariant;
+  url: string
   title: string;
 };
 
@@ -25,49 +18,12 @@ const IntroSection: React.FC<IntroSectionProps> = ({ className, image, children 
   return (
     <section className={clsx(className, styles["intro-section"])}>
       <div className={styles["intro-section__img-container"]}>
-        <picture className={styles["intro-section__picture"]}>
-          {/* mobile */}
-          {image.sm.avif && (
-            <source
-              media="(max-width: 424px)"
-              type="image/avif"
-              srcSet={image.sm.avif}
-            />
-          )}
-          {image.sm.webp && (
-            <source
-              media="(max-width: 424px)"
-              type="image/webp"
-              srcSet={image.sm.webp}
-            />
-          )}
-          <source
-            media="(max-width: 424px)"
-            srcSet={image.sm.fallback}
-          />
-
-          {/* desktop */}
-          {image.sm.avif && (
-            <source
-              media="(min-width: 425px)"
-              type="image/avif"
-              srcSet={image.lg.avif}
-            />
-          )}
-          {image.sm.webp && (
-            <source
-              media="(min-width: 425px)"
-              type="image/webp"
-              srcSet={image.lg.webp}
-            />
-          )}
-          <img
-            src={image.lg.fallback}
-            alt={image.title}
-            loading="eager"
-            className={styles["intro-section__img"]}
-          />
-        </picture>
+        <img
+          src={image.url}
+          alt={image.title}
+          loading="eager"
+          className={styles["intro-section__img"]}
+        />
       </div>
       <Text
         tag="h1"
