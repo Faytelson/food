@@ -6,7 +6,7 @@ import styles from "./RecipeComponent.module.scss";
 import clsx from "clsx";
 
 type RecipeComponentProps = {
-  children: React.ReactNode;
+  children: string;
   className?: string;
   iconType: string;
 };

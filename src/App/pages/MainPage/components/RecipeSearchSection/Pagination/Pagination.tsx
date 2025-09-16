@@ -26,7 +26,6 @@ function getPaginationRange(
   const leftSibling = Math.max(2, currentPage - siblingCount);
   const rightSibling = Math.min(totalPages - 1, currentPage + siblingCount);
 
-  // пушим страницы в массив
   pages.push(1);
   if (leftSibling > 2) {
     pages.push("...");

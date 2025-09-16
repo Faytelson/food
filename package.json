@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/qs": "^6.14.0",
     "axios": "^1.12.1",
     "clsx": "^2.1.1",
     "qs": "^6.14.0",
@@ -22,8 +23,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
     "@types/sass": "^1.45.0",
     "@vitejs/plugin-react": "^5.0.0",
     "eslint": "^9.35.0",

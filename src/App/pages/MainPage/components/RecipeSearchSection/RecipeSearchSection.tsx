@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import InputDropdown from "./InputDropdown";
-import SearchInput from "./SearchInput";
+import InputDropdown, { type Option } from "./InputDropdown";
+import SearchBar from "./SearchBar";
 import Card, { type CardProps } from "./Card";
 import Button from "./Button";
 import Pagination from "./Pagination";
@@ -11,7 +11,6 @@ import type { Recipe } from "@api/recipes";
 import { getRecipes } from "@api/recipes";
 import qs from "qs";
 import { useNavigate } from "react-router-dom";
-import { roundNum } from "@utils/roundNum";
 
 export type RecipeSearchSectionProps = {
   className?: string;
@@ -73,13 +72,12 @@ const fetchRecipes = async ({ categoryId, searchQuery, page = 1, populate }: Fet
   return getRecipes(`?${query}`);
 };
 
-const RecipeSearchSection = ({ className }) => {
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState<Option>(null);
+const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) => {
+  const [categories, setCategories] = useState <Option []>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  // инпут
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -87,19 +85,18 @@ const RecipeSearchSection = ({ className }) => {
     const fetchInitial = async () => {
       try {
         const data = await fetchRecipes({ populate: ["images", "category"] });
-
-        // set recipes
         setRecipes(data.data);
-        // set categories
-        const raw = data.data
+
+        const raw: [number, string][] = data.data
           .filter((r) => r.category)
-          .map((r) => [r.category.id, r.category.title]);
+          .map((r) => [r.category?.id as number, r.category?.title as string]);
+
         const options: Option[] = Array.from(new Map(raw).entries()).map(([key, value]) => ({
           key,
           value,
         }));
         setCategories(options);
-        // set pages
+
         setTotalPages(data.meta.pagination.pageCount || 1);
       } catch (err) {
         throw new Error(`Failed to fetch: ${err}`);
@@ -108,53 +105,6 @@ const RecipeSearchSection = ({ className }) => {
 
     fetchInitial();
   }, []);
-
-  // useEffect(() => {
-  //   const fetchRecipes = async () => {
-  //     try {
-  //       const categoryIds = selectedCategories.map((c) => c.key);
-
-  //       const queryObj: QueryObj = {
-  //         populate: ["images", "category"],
-  //         pagination: {
-  //           page: currentPage,
-  //           pageSize: 9,
-  //         },
-  //       };
-  //       if (categoryIds.length === 1) {
-  //         queryObj.filters = {
-  //           category: { id: { $eq: categoryIds[0] } },
-  //         };
-  //       } else if (categoryIds.length > 1) {
-  //         const requests = categoryIds.map((id) => {
-  //           const q = qs.stringify(
-  //             {
-  //               populate: ["images", "category"],
-  //               filters: { category: { id: { $eq: id } } },
-  //               pagination: { page: currentPage, pageSize: 9 },
-  //             },
-  //             { encodeValuesOnly: true },
-  //           );
-  //           return getRecipes(`?${q}`);
-  //         });
-  //         const responses = await Promise.all(requests);
-  //         const allRecipes = responses.flatMap((res) => res.data);
-  //         setRecipes(allRecipes);
-  //         setTotalPages(responses[0]?.meta.pagination.pageCount || 1);
-  //         return;
-  //       }
-
-  //       const query = qs.stringify(queryObj, { encodeValuesOnly: true });
-  //       const data = await getRecipes(`?${query}`);
-  //       setRecipes(data.data);
-  //       setTotalPages(data.meta.pagination.pageCount || 1);
-  //     } catch (err) {
-  //       throw new Error(`Failed to fetch recipes: ${err}`);
-  //     }
-  //   };
-
-  //   fetchRecipes();
-  // }, [currentPage, selectedCategories]);
 
   const navigate = useNavigate();
 
@@ -182,7 +132,7 @@ const RecipeSearchSection = ({ className }) => {
     }
   };
 
-  const handleCategoryChange = (category: Option) => {
+  const handleCategoryChange = (category: Option | null) => {
     if (category === null) {
       setSelectedCategory(null);
       updateRecipes({ categoryId: undefined, searchQuery, page: 1 });
@@ -209,8 +159,8 @@ const RecipeSearchSection = ({ className }) => {
 
   const recipeCards: CardProps[] = recipes.map((r) => {
     const imageData = {
-      url: r.images?.[0]?.url,
-      alt: r.images?.[0]?.name,
+      url: r.images?.[0]?.url ?? "",
+      alt: r.images?.[0]?.name ?? "Recipe Image",
       id: r.images?.[0]?.id,
     };
 
@@ -229,7 +179,7 @@ const RecipeSearchSection = ({ className }) => {
       ),
       title: r.name,
       subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
-      contentSlot: <span>{roundNum(r.calories)} kcal</span>,
+      contentSlot: <span>{Math.round(r.calories)} kcal</span>,
       actionSlot: <Button onClick={(e) => e.stopPropagation()}>Save</Button>,
       onClick: () => navigate(`/recipes/${r.documentId}`),
     };
@@ -244,10 +194,10 @@ const RecipeSearchSection = ({ className }) => {
       >
         <div className={styles["recipe-search-section__search"]}>
           {
-            <SearchInput
+            <SearchBar
               value={searchInput}
               onChange={handleSearchChange}
-            ></SearchInput>
+            ></SearchBar>
           }
         </div>
         <div className={styles["recipe-search-section__categories"]}>

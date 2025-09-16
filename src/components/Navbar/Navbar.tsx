@@ -1,4 +1,3 @@
-import React from "react";
 import Text from "@components/Text";
 import { NavLink } from "react-router";
 import styles from "./Navbar.module.scss";

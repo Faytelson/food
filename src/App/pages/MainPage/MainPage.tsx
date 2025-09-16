@@ -18,7 +18,7 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
         from <Link to="/weeknight-dinners">weeknight dinners</Link> to{" "}
         <Link to="/holiday-feasts">holiday feasts</Link>.
       </IntroSection>
-      <RecipeSearchSection></RecipeSearchSection>
+      <RecipeSearchSection/>
     </div>
   );
 };
