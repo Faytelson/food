@@ -1,13 +1,9 @@
 import React from "react";
 import RecipeComponentList from "./RecipeComponentsList";
 import RecipeDirections from "./RecipeDirections";
+import { type Direction } from "../../DetailPage";
 import clsx from "clsx";
 import styles from "./RecipeDetailSection.module.scss";
-
-export type Direction = {
-  id: string | number;
-  title: string;
-};
 
 type RecipeDetailSectionProps = {
   className?: string;
@@ -20,9 +16,8 @@ const RecipeDetailSection: React.FC<RecipeDetailSectionProps> = ({
   className,
   ingredients,
   equipments,
-  directions
+  directions,
 }) => {
-
   return (
     <section className={clsx(styles["recipe-detail-section"], className)}>
       <RecipeComponentList

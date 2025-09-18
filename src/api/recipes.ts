@@ -7,6 +7,12 @@ export type RecipeImage = {
   url: string;
 };
 
+export type RecipeCategory = {
+  id: number;
+  documentId?: string;
+  title: string;
+};
+
 export type Recipe = {
   id: number;
   documentId: string;
@@ -24,6 +30,7 @@ export type Recipe = {
   likes: number;
   vegetarian: boolean;
   images?: RecipeImage[];
+  category?: RecipeCategory;
 };
 
 export type RecipesResponse = {

@@ -6,25 +6,16 @@ import clsx from "clsx";
 export type CardImage = {
   url: string;
   alt: string;
-  id: number;
+  id?: number;
 };
 
 export type CardProps = {
-  /** Дополнительный classname */
   className?: string;
-  /** URL изображения */
   image: CardImage;
-  /** Слот над заголовком */
   captionSlot?: React.ReactNode;
-  /** Заголовок карточки */
-  title: React.ReactNode;
-  /** Описание карточки */
+  title: string;
   subtitle: React.ReactNode;
-  /** Содержимое карточки (футер/боковая часть), может быть пустым */
   contentSlot?: React.ReactNode;
-  /** Клик на карточку */
-  onClick?: React.MouseEventHandler;
-  /** Слот для действия */
   actionSlot?: React.ReactNode;
 };
 
@@ -35,13 +26,11 @@ const Card: React.FC<CardProps> = ({
   title,
   subtitle,
   contentSlot,
-  onClick,
   actionSlot,
 }) => {
   return (
     <article
       className={clsx(styles.card, className)}
-      onClick={onClick}
     >
       <div className={styles["card__image-section"]}>
         <img

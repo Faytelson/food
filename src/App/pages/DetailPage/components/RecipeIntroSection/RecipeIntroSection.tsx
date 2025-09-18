@@ -4,32 +4,23 @@ import Text from "@components/Text";
 import RecipeMetaList from "./RecipeMetaList";
 import RecipeDescription from "./RecipeDescription";
 import styles from "./RecipeIntroSection.module.scss";
+import { type RecipeImage } from "@api/recipes";
 import clsx from "clsx";
 
-export type RecipeIntroImage = {
-  src: string;
-  alt: string;
-  id: number;
-};
-
 export type RecipeMeta = {
-  prep: number;
-  cooking: number;
-  total: number;
-  likes: number;
-  servings: number;
-  ratings: boolean;
+  term: string;
+  description: string;
 };
 
 export type RecipeIntroSectionProps = {
   className?: string;
   title: string;
-  image: RecipeIntroImage;
-  data: RecipeMeta;
+  image?: RecipeImage;
+  data: RecipeMeta[];
   summary: React.ReactNode;
 };
 
-const RecipeIntroSection: React.FC<IntroSectionProps> = ({
+const RecipeIntroSection: React.FC<RecipeIntroSectionProps> = ({
   className,
   title,
   image,
@@ -50,19 +41,24 @@ const RecipeIntroSection: React.FC<IntroSectionProps> = ({
         </Text>
       </header>
       <section className={styles["recipe-intro-section__about"]}>
-        <div className={styles["recipe-intro-section__img-container"]}>
-          <img
-            src={image.url}
-            alt={image.name}
-            loading="eager"
-            className={styles["recipe-intro-section__img"]}
-          />
-        </div>
+        {image && (
+          <div className={styles["recipe-intro-section__img-container"]}>
+            <img
+              src={image.url}
+              alt={image.name}
+              loading="eager"
+              className={styles["recipe-intro-section__img"]}
+            />
+          </div>
+        )}
         <RecipeMetaList
           className={styles["recipe-intro-section__meta-list"]}
           items={data}
         ></RecipeMetaList>
-        <RecipeDescription className={styles["recipe-intro-section__description"]} content={summary}></RecipeDescription>
+        <RecipeDescription
+          className={styles["recipe-intro-section__description"]}
+          content={summary}
+        ></RecipeDescription>
       </section>
     </section>
   );

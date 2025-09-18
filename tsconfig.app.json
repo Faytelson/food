@@ -32,6 +32,8 @@
       "@utils/*": ["src/utils/*"],
       "@app/*": ["src/App/*"],
       "@api/*": ["src/api/*"],
+      "@assets/*": ["src/assets/*"],
+      "@images/*": ["src/images/*"]
     }
   },
   "include": ["src"]

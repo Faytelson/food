@@ -4,14 +4,10 @@ import Text from "@components/Text";
 import styles from "./RecipeComponentsList.module.scss";
 import clsx from "clsx";
 
-type RecipeComponentData = {
-  content: string;
-};
-
-type RecipeComponentListProps = {
+export type RecipeComponentListProps = {
   className?: string;
   title: string;
-  items: RecipeComponentData[];
+  items: string[];
   type: "ingredients" | "equipment";
 };
 

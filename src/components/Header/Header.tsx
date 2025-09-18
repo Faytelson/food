@@ -1,18 +1,12 @@
 import React, { useState } from "react";
-// import { a } from "react-router-dom";
 import Logo from "@components/Logo";
-import Navbar from "@components/Navbar";
+import Navbar, {type NavLink} from "@components/Navbar";
 import ButtonTool from "@components/ButtonTool";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
 
 type HeaderProps = {
   className?: string;
-};
-
-export type Navlink = {
-  label: string;
-  href: string;
 };
 
 const navLinks: NavLink[] = [
