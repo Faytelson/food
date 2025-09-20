@@ -1,6 +1,6 @@
 @use "@styles" as *;
 
-.recipe-search-section {
+.search-section {
   display: flex;
   flex-direction: column;
   row-gap: var(--space-xl);
@@ -40,7 +40,7 @@
 }
 
 @media screen and (min-width: 900px) {
-  .recipe-search-section {
+  .search-section {
     &__list {
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
@@ -48,7 +48,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-  .recipe-search-section {
+  .search-section {
     &__list {
       column-gap: var(--space-xxl);
       row-gap: 64px;

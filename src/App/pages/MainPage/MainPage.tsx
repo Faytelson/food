@@ -1,6 +1,6 @@
 import React from "react";
 import IntroSection from "./components/IntroSection";
-import RecipeSearchSection from "./components/RecipeSearchSection";
+import SearchSection from "./components/SearchSection";
 import styles from "./MainPage.module.scss";
 import clsx from "clsx";
 import { Link } from "react-router";
@@ -18,7 +18,7 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
         from <Link to="/weeknight-dinners">weeknight dinners</Link> to{" "}
         <Link to="/holiday-feasts">holiday feasts</Link>.
       </IntroSection>
-      <RecipeSearchSection />
+      <SearchSection />
     </div>
   );
 };

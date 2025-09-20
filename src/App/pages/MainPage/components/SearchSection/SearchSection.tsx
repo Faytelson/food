@@ -7,12 +7,12 @@ import Pagination from "./Pagination";
 import ClockIcon from "@components/icons/ClockIcon";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
-import styles from "./RecipeSearchSection.module.scss";
+import styles from "./SearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
 import { getRecipes } from "@api/recipes";
 import qs from "qs";
 
-export type RecipeSearchSectionProps = {
+export type SearchSectionProps = {
   className?: string;
 };
 
@@ -74,7 +74,7 @@ const fetchRecipes = async ({ categoryId, searchQuery, page = 1, populate }: Fet
   return getRecipes(`?${query}`);
 };
 
-const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) => {
+const SearchSection: React.FC<SearchSectionProps> = ({ className }) => {
   const [categories, setCategories] = useState<Option[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -186,13 +186,13 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
   });
 
   return (
-    <section className={clsx(className, styles["recipe-search-section"])}>
+    <section className={clsx(className, styles["search-section"])}>
       <form
         role="search"
         aria-label="Recipe search"
-        className={styles["recipe-search-section__form"]}
+        className={styles["search-section__form"]}
       >
-        <div className={styles["recipe-search-section__search"]}>
+        <div className={styles["search-section__search"]}>
           {
             <SearchBar
               value={searchInput}
@@ -200,7 +200,7 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
             ></SearchBar>
           }
         </div>
-        <div className={styles["recipe-search-section__categories"]}>
+        <div className={styles["search-section__categories"]}>
           <InputDropdown
             options={categories}
             value={selectedCategory}
@@ -210,17 +210,20 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
         </div>
       </form>
 
-      <section aria-labelledby="search-results">
-        <ul className={styles["recipe-search-section__list"]}>
+      <section
+        aria-labelledby="search-results"
+        className={styles["search-section__results"]}
+      >
+        {/* <ul className={styles["search-section__list"]}>
           {recipeCards.map((card) => {
             return (
               <li
-                className={styles["recipe-search-section__item"]}
+                className={styles["search-section__item"]}
                 key={card.title}
               >
                 <Link to={`/recipes/${card.documentId}`}>
                   <Card
-                    className={styles["recipe-search-section__card"]}
+                    className={styles["search-section__card"]}
                     image={card.image}
                     captionSlot={card.captionSlot}
                     title={card.title}
@@ -232,7 +235,7 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
               </li>
             );
           })}
-        </ul>
+        </ul> */}
       </section>
 
       <Pagination
@@ -244,4 +247,4 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
   );
 };
 
-export default RecipeSearchSection;
+export default SearchSection;
