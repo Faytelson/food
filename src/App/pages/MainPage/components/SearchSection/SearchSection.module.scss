@@ -17,26 +17,6 @@
     max-width: 300px;
     align-self: flex-end;
   }
-
-  &__list {
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-content: center;
-    gap: var(--space-m);
-  }
-
-  &__item {
-    display: flex;
-    max-width: 100%;
-    justify-content: center;
-    cursor: pointer;
-  }
-
-  &__card {
-    flex: auto 1 1;
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 @media screen and (min-width: 900px) {
