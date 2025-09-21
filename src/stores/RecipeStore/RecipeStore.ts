@@ -1,4 +1,5 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
+import { getRecipeByDocumentId } from "@api/recipes";
 import { type Recipe } from "@api/recipes";
 
 export type Ingredient = {
@@ -38,6 +39,49 @@ class RecipeStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  async fetchRecipeById() {
+    try {
+      if (!this.documentId) throw new Error("ID is missing");
+      const data = await getRecipeByDocumentId(this.documentId);
+      const recipe = data.data;
+
+      runInAction(() => {
+        this.setRecipe(recipe);
+
+        this.setRecipeMeta([
+          {
+            term: "Preparation",
+            description: `${recipe.preparationTime ?? "—"} minutes`,
+          },
+          { term: "Cooking", description: `${recipe.cookingTime ?? "—"} minutes` },
+          { term: "Total", description: `${recipe.totalTime ?? "—"} minutes` },
+          { term: "Likes", description: recipe.likes ?? "—" },
+          { term: "Servings", description: `${recipe.servings ?? "—"} servings` },
+          { term: "Rating", description: recipe.rating ? `${recipe.rating}/5` : "—" },
+        ]);
+
+        const ingredientsList = recipe.ingradients.map((i: Ingredient) => {
+          const unitPart = i.unit ? ` ${i.unit}` : "";
+          return `${i.amount}${unitPart} ${i.name}`;
+        });
+        this.setIngredients(ingredientsList);
+
+        this.setEquipments(recipe.equipments.map((e: EquipmentItem) => e.name));
+
+        const directionsList = recipe.directions.map((d: DirectionText, index: number) => ({
+          title: `Step ${index + 1}`,
+          content: d.description,
+        }));
+
+        this.setDirections(directionsList);
+      });
+    } catch (err) {
+      throw new Error(`Failed to fetch recipe: ${err}`);
+    } finally {
+      // setLoading(false);
+    }
   }
 
   setRecipe(recipe: Recipe | null) {
