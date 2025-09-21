@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Logo from "@components/Logo";
-import Navbar, {type NavLink} from "@components/Navbar";
+import Navbar, { type NavLink } from "@components/Navbar";
 import ButtonTool from "@components/ButtonTool";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
@@ -41,9 +41,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
           <ButtonTool
             variant="favorite"
             iconProps={{ width: 19, height: 19, color: "accent" }}
-            onClick={() => {
-              return "added to favorites";
-            }}
+            to="/favorites"
           ></ButtonTool>
           <ButtonTool
             variant="profile"

@@ -1,0 +1,18 @@
+@use "@styles" as *;
+
+.favorites {
+  padding-bottom: var(--space-xl);
+  padding-top: var(--space-l);
+  background-color: var(--color-main-background);
+
+  &__inner {
+    @include container;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    margin-bottom: var(--space-xxl);
+  }
+}
