@@ -36,14 +36,70 @@ class SearchStore {
     makeAutoObservable(this);
   }
 
-  async initialize(populate: string[] = ["images", "category"]) {
-    this.populate = populate;
-    await this.fetchAndSet({ page: 1, populate: this.populate });
+  async initializeFromURL(populate: string[] = ["images", "category"]) {
+    runInAction(() => {
+      this.populate = populate;
+    });
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const search = searchParams.get("search") ?? "";
+    const categoryId = searchParams.get("category");
+    const page = Number(searchParams.get("page")) || 1;
+
+    runInAction(() => {
+      this.searchQuery = search;
+      this.currentPage = page;
+      if (categoryId) this.selectedCategory = { key: Number(categoryId), value: "" };
+    });
+
+    await this.fetchCategories();
+
+    if (categoryId) {
+      const cat = this.categories.find((c) => c.key === Number(categoryId));
+      if (cat)
+        runInAction(() => {
+          this.selectedCategory = cat;
+        });
+    }
+
+    await this.fetchRecipes({
+      categoryId: this.selectedCategory?.key,
+      searchQuery: this.searchQuery,
+      page: this.currentPage,
+      populate: this.populate,
+    });
   }
 
-  private async fetchAndSet(params: FetchParams) {
-    this.isLoading = true;
-    this.error = null;
+  async fetchCategories() {
+    if (this.categories.length > 0) return;
+
+    const queryObj: QueryObj = { populate: ["category"] };
+    const query = qs.stringify(queryObj, { encodeValuesOnly: true });
+
+    try {
+      const data: RecipesResponse = await getRecipes(`?${query}`);
+      runInAction(() => {
+        const raw: [number, string][] = data.data
+          .filter((r) => r.category)
+          .map((r) => [r.category!.id as number, r.category!.title as string]);
+        this.categories = Array.from(new Map(raw).entries()).map(([key, value]) => ({
+          key,
+          value,
+        }));
+      });
+    } catch (err) {
+      runInAction(() => {
+        this.error = String(err);
+      });
+      throw err;
+    }
+  }
+
+  private async fetchRecipes(params: FetchParams) {
+    runInAction(() => {
+      this.isLoading = true;
+      this.error = null;
+    });
 
     const queryObj: QueryObj = {
       populate: params.populate ?? this.populate,
@@ -70,22 +126,10 @@ class SearchStore {
 
     try {
       const data: RecipesResponse = await getRecipes(`?${query}`);
-
       runInAction(() => {
         this.recipes = data.data;
         this.totalPages = data.meta.pagination.pageCount || 1;
         this.currentPage = params.page ?? 1;
-
-        if (this.categories.length === 0) {
-          const raw: [number, string][] = data.data
-            .filter((r) => r.category)
-            .map((r) => [r.category!.id as number, r.category!.title as string]);
-          this.categories = Array.from(new Map(raw).entries()).map(([key, value]) => ({
-            key,
-            value,
-          }));
-        }
-
         this.isLoading = false;
       });
     } catch (err) {
@@ -97,21 +141,26 @@ class SearchStore {
     }
   }
 
-  async search(query: string) {
-    this.searchQuery = query;
-    this.currentPage = 1;
-    await this.fetchAndSet({
+  async setSearch(query: string) {
+    runInAction(() => {
+      this.searchQuery = query;
+      this.currentPage = 1;
+    });
+    await this.fetchRecipes({
       searchQuery: query,
+      categoryId: this.selectedCategory?.key,
       page: 1,
       populate: this.populate,
     });
   }
 
   async selectCategory(option: Option | null) {
-    this.selectedCategory = option;
-    this.currentPage = 1;
+    runInAction(() => {
+      this.selectedCategory = option;
+      this.currentPage = 1;
+    });
     const categoryId = option ? option.key : undefined;
-    await this.fetchAndSet({
+    await this.fetchRecipes({
       categoryId,
       searchQuery: this.searchQuery,
       page: 1,
@@ -120,8 +169,10 @@ class SearchStore {
   }
 
   async setPage(page: number) {
-    this.currentPage = page;
-    await this.fetchAndSet({
+    runInAction(() => {
+      this.currentPage = page;
+    });
+    await this.fetchRecipes({
       categoryId: this.selectedCategory?.key,
       searchQuery: this.searchQuery,
       page,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { searchStore } from "@stores/SearchStore";
+import { useSearchParams } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./SearchSection.module.scss";
 
@@ -11,24 +12,42 @@ import CardList from "./CardList";
 
 const SearchSection: React.FC<{ className?: string }> = observer(({ className }) => {
   const [searchInput, setSearchInput] = useState("");
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    searchStore.initialize();
+    searchStore.initializeFromURL().then(() => {
+      setSearchInput(searchStore.searchQuery);
+    });
   }, []);
 
   const getTitle = (option: Option | null) => (option ? option.value : "Categories");
 
   const handleCategoryChange = (category: Option | null) => {
     searchStore.selectCategory(category);
+    setSearchParams({
+      search: searchStore.searchQuery,
+      category: category?.key?.toString() ?? "",
+      page: "1",
+    });
   };
 
   const handleSearchChange = (value: string) => {
     setSearchInput(value);
-    searchStore.search(value);
+    searchStore.setSearch(value);
+    setSearchParams({
+      search: value,
+      category: searchStore.selectedCategory?.key?.toString() ?? "",
+      page: "1",
+    });
   };
 
   const handlePageChange = (page: number) => {
     searchStore.setPage(page);
+    setSearchParams({
+      search: searchStore.searchQuery,
+      category: searchStore.selectedCategory?.key?.toString() ?? "",
+      page: String(page),
+    });
   };
 
   return (
