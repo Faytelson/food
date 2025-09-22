@@ -1,5 +1,8 @@
 import { type Recipe } from "@api/recipes";
 import styles from "./CardList.module.scss";
+import { favoritesStore } from "@stores/FavoritesStore";
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 
 import Card, { type CardProps } from "../Card/Card";
 import Button from "../Button";
@@ -10,7 +13,10 @@ export type CardWithId = CardProps & { documentId: string };
 export type CardListProps = {
   recipes: Recipe[];
 };
-const CardList = ({ recipes }: CardListProps) => {
+const CardListBase = ({ recipes }: CardListProps) => {
+  useEffect(() => {
+    favoritesStore.initialize();
+  }, []);
   const recipeCards = recipes.map((r) => {
     const imageData = {
       url: r.images?.[0]?.url ?? "",
@@ -34,7 +40,20 @@ const CardList = ({ recipes }: CardListProps) => {
       title: r.name,
       subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
       contentSlot: <span>{Math.round(r.calories)} kcal</span>,
-      actionSlot: <Button onClick={(e) => e.stopPropagation()}>Save</Button>,
+      actionSlot: (
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            if (favoritesStore.isFavorite(r.id)) {
+              favoritesStore.removeFromFavorites(r.id);
+            } else {
+              favoritesStore.addToFavorites(r.id);
+            }
+          }}
+        >
+          <Button>{favoritesStore.isFavorite(r.id) ? "Remove" : "Save"}</Button>
+        </div>
+      ),
       documentId: r.documentId,
     };
   });
@@ -65,4 +84,5 @@ const CardList = ({ recipes }: CardListProps) => {
   );
 };
 
+const CardList = observer(CardListBase);
 export default CardList;

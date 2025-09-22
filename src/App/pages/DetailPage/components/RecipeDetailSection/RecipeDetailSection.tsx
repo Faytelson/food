@@ -1,7 +1,7 @@
 import React from "react";
 import RecipeComponentList from "./RecipeComponentsList";
 import RecipeDirections from "./RecipeDirections";
-import { type Direction } from "../../DetailPage";
+import { type Direction } from "@stores/RecipeStore";
 import clsx from "clsx";
 import styles from "./RecipeDetailSection.module.scss";
 

@@ -1,12 +1,13 @@
 import api from "./axios";
+import { type Recipe } from "./recipes";
 
-export type Favorite = {
-  id: number;
-  recipe: number;
+export type FavoriteRecipe = {
+  originalRecipeId: number;
+  recipe: Recipe;
 };
 
 export async function getFavorites() {
-  const res = await api.get<Favorite[]>("/favorites");
+  const res = await api.get<FavoriteRecipe[]>("/favorites");
   return res.data;
 }
 

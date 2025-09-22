@@ -29,9 +29,7 @@ const Card: React.FC<CardProps> = ({
   actionSlot,
 }) => {
   return (
-    <article
-      className={clsx(styles.card, className)}
-    >
+    <article className={clsx(styles.card, className)}>
       <div className={styles["card__image-section"]}>
         <img
           src={image.url}
@@ -92,7 +90,13 @@ const Card: React.FC<CardProps> = ({
             </div>
           )}
 
-          {actionSlot && <div className={styles["card__action-slot"]}>{actionSlot}</div>}
+          {actionSlot && (
+            <div
+              className={styles["card__action-slot"]}
+            >
+              {actionSlot}
+            </div>
+          )}
         </footer>
       </div>
     </article>

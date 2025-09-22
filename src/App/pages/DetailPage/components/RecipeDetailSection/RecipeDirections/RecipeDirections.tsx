@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Text from "@components/Text";
 import RecipeDirectionItem from "./RecipeDirectionItem";
 import styles from "./RecipeDirections.module.scss";
-import { type Direction } from "@app/pages/DetailPage/DetailPage";
+import { type Direction } from "@stores/RecipeStore";
 
 type RecipeDirectionsProps = {
   items: Direction[];

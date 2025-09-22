@@ -1,22 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import clsx from "clsx";
 import styles from "./Favorites.module.scss";
 import { favoritesStore } from "@stores/FavoritesStore";
 
 import Text from "@components/Text";
 import ButtonBack from "@components/ButtonBack";
+import CardList from "../MainPage/components/SearchSection/CardList";
+import { observer } from "mobx-react-lite";
 
 export type FavoritesPageProps = {
   className?: string;
 };
 
-const Favorites: React.FC<FavoritesPageProps> = ({ className }) => {
-  useEffect(() => {
-    favoritesStore.fetchFavorites();
-  }, []);
-
-  useEffect(() => {}, []);
-
+const FavoritesBase: React.FC<FavoritesPageProps> = ({ className }) => {
   return (
     <section className={clsx(styles["favorites"], className)}>
       <div className={styles["favorites__inner"]}>
@@ -33,20 +29,12 @@ const Favorites: React.FC<FavoritesPageProps> = ({ className }) => {
         </div>
 
         <div className={styles["favorites__list"]}>
-          {favoritesStore.favorites.map((f) => {
-            return (
-              <div
-                key={f.id}
-                className={styles["favorites__item"]}
-              >
-                {f.id} {f.recipe}
-              </div>
-            );
-          })}
+          <CardList recipes={favoritesStore.favorites.map((f) => f.recipe)}></CardList>
         </div>
       </div>
     </section>
   );
 };
 
+const Favorites = observer(FavoritesBase);
 export default Favorites;
