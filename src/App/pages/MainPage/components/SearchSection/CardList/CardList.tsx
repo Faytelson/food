@@ -2,7 +2,6 @@ import { type Recipe } from "@api/recipes";
 import styles from "./CardList.module.scss";
 import { favoritesStore } from "@stores/FavoritesStore";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 
 import Card, { type CardProps } from "../Card/Card";
 import Button from "../Button";
@@ -14,9 +13,6 @@ export type CardListProps = {
   recipes: Recipe[];
 };
 const CardListBase = ({ recipes }: CardListProps) => {
-  useEffect(() => {
-    favoritesStore.initialize();
-  }, []);
   const recipeCards = recipes.map((r) => {
     const imageData = {
       url: r.images?.[0]?.url ?? "",

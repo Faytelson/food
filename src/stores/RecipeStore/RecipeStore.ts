@@ -36,14 +36,22 @@ class RecipeStore {
   equipments: string[] = [];
   directions: Direction[] = [];
   documentId: string = "";
+  isLoading = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
   async fetchRecipeById() {
+    if (!this.documentId) {
+      throw new Error("ID is missing");
+    }
+
+    runInAction(() => {
+      this.isLoading = true;
+    });
+
     try {
-      if (!this.documentId) throw new Error("ID is missing");
       const data = await getRecipeByDocumentId(this.documentId);
       const recipe = data.data;
 
@@ -80,7 +88,9 @@ class RecipeStore {
     } catch (err) {
       throw new Error(`Failed to fetch recipe: ${err}`);
     } finally {
-      // setLoading(false);
+      runInAction(() => {
+        this.isLoading = false;
+      });
     }
   }
 

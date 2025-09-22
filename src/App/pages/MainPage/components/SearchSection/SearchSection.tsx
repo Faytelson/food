@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { searchStore } from "@stores/SearchStore";
+import { favoritesStore } from "@stores/FavoritesStore";
 import { useSearchParams } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./SearchSection.module.scss";
@@ -9,6 +10,7 @@ import InputDropdown, { type Option } from "./InputDropdown";
 import SearchBar from "./SearchBar";
 import Pagination from "./Pagination";
 import CardList from "./CardList";
+import Loader from "@components/Loader";
 
 const SearchSection: React.FC<{ className?: string }> = observer(({ className }) => {
   const [searchInput, setSearchInput] = useState("");
@@ -18,6 +20,10 @@ const SearchSection: React.FC<{ className?: string }> = observer(({ className })
     searchStore.initializeFromURL().then(() => {
       setSearchInput(searchStore.searchQuery);
     });
+  }, []);
+
+  useEffect(() => {
+    favoritesStore.initialize();
   }, []);
 
   const getTitle = (option: Option | null) => (option ? option.value : "Categories");
@@ -78,7 +84,13 @@ const SearchSection: React.FC<{ className?: string }> = observer(({ className })
         aria-labelledby="search-results"
         className={styles["search-section__results"]}
       >
-        <CardList recipes={searchStore.recipes} />
+        {searchStore.isLoading ? (
+          <div className={styles["search-section__loader"]}>
+            <Loader size="l" />
+          </div>
+        ) : (
+          <CardList recipes={searchStore.recipes} />
+        )}
       </section>
 
       <Pagination
