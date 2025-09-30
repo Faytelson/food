@@ -1,6 +1,6 @@
 import React from "react";
-import ArrowLeftIcon from "@components/icons/ArrowLeftIcon";
-import ArrowRightIcon from "@components/icons/ArrowRightIcon";
+import ArrowLeftIcon from "@assets/icons/arrow_left.svg?react";
+import ArrowRightIcon from "@assets/icons/arrow-right.svg?react";
 import clsx from "clsx";
 import styles from "./Pagination.module.scss";
 
@@ -80,7 +80,7 @@ const Pagination: React.FC<PaginationProps> = ({
             disabled={currentPage === 1}
             aria-label="Previous Page"
           >
-            <ArrowLeftIcon color={currentPage === 1 ? "secondary" : "primary"}></ArrowLeftIcon>
+            <ArrowLeftIcon></ArrowLeftIcon>
           </button>
         </li>
 

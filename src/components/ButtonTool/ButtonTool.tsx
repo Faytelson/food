@@ -1,11 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import type { IconProps } from "@components/icons/Icon";
 import clsx from "clsx";
 import styles from "./ButtonTool.module.scss";
 
-import HeartIcon from "@components/icons/HeartIcon";
-import ProfileIcon from "@components/icons/ProfileIcon";
+// import HeartIcon from "@assets/icons/heart.svg?react";
+import ProfileIcon from "@assets/icons/user.svg?react";
 
 export type ButtonToolVariant = "favorite" | "profile";
 
@@ -13,25 +12,17 @@ export type ButtonToolProps = {
   className?: string;
   variant: ButtonToolVariant;
   onClick?: () => void;
-  iconProps?: Partial<IconProps>;
   to?: string;
 };
 
-const iconMap: Record<ButtonToolVariant, React.FC<IconProps>> = {
-  favorite: HeartIcon,
-  profile: ProfileIcon,
-};
-
-const ButtonTool: React.FC<ButtonToolProps> = ({ className, variant, onClick, iconProps, to }) => {
-  const IconComponent = iconMap[variant];
-
+const ButtonTool: React.FC<ButtonToolProps> = ({ className, onClick, to }) => {
   if (to) {
     return (
       <Link
         to={to}
         className={clsx(className, styles["button-tool"])}
       >
-        <IconComponent {...iconProps} />
+        <ProfileIcon></ProfileIcon>
       </Link>
     );
   }
@@ -41,7 +32,7 @@ const ButtonTool: React.FC<ButtonToolProps> = ({ className, variant, onClick, ic
       onClick={onClick}
       className={clsx(className, "button-tool")}
     >
-      <IconComponent {...iconProps} />
+      <ProfileIcon />
     </button>
   );
 };

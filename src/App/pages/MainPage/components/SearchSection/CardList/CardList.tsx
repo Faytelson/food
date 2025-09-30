@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 
 import Card, { type CardProps } from "../Card/Card";
 import Button from "../Button";
-import ClockIcon from "@components/icons/ClockIcon";
+import ClockIcon from "@assets/icons/clock.svg?react";
 import { Link } from "react-router-dom";
 
 export type CardWithId = CardProps & { documentId: string };
@@ -24,12 +24,7 @@ const CardListBase = ({ recipes }: CardListProps) => {
       image: imageData,
       captionSlot: (
         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <ClockIcon
-            width={15}
-            height={15}
-            color="accent"
-            style={{ position: "relative", top: "-1px" }}
-          />
+          <ClockIcon />
           {r.preparationTime} minutes
         </span>
       ),

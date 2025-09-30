@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Input from "../Input";
-import ArrowDownIcon from "@components/icons/ArrowDownIcon";
+import ArrowDownIcon from "@assets/icons/arrow_down.svg?react";
 import clsx from "clsx";
 import styles from "./InputDropdown.module.scss";
 
@@ -74,7 +74,7 @@ const InputDropdown: React.FC<InputDropdownProps> = ({
         value={inputValue}
         placeholder={getTitle(value)}
         disabled={disabled}
-        afterSlot={<ArrowDownIcon color="secondary"></ArrowDownIcon>}
+        afterSlot={<ArrowDownIcon></ArrowDownIcon>}
         onClick={() => {
           if (disabled) return;
           setIsOpen((prev) => !prev);

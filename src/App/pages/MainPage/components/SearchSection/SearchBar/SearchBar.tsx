@@ -1,13 +1,13 @@
 import React from "react";
 import Input from "../Input";
-import SearchIcon from "@components/icons/SearchIcon";
+import SearchIcon from "@assets/icons/search.svg?react";
 import styles from "./SearchBar.module.scss";
 
 type SearchBarProps = {
   value: string;
   onChange: (value: string) => void;
 };
-
+ 
 const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
   const handleChange = () => {
     onChange(value);
@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
         onClick={handleChange}
         className={styles["search-bar__button"]}
       >
-        <SearchIcon className={styles["search-bar__search-icon"]}></SearchIcon>
+        <SearchIcon></SearchIcon>
       </button>
     </div>
   );
