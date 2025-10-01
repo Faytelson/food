@@ -7,7 +7,7 @@ type SearchBarProps = {
   value: string;
   onChange: (value: string) => void;
 };
- 
+
 const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
   const handleChange = () => {
     onChange(value);
@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
         onClick={handleChange}
         className={styles["search-bar__button"]}
       >
-        <SearchIcon></SearchIcon>
+        <SearchIcon className={styles["search-bar__search-icon"]} />
       </button>
     </div>
   );

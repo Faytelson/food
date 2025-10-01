@@ -14,8 +14,20 @@ type RecipeComponentProps = {
 const RecipeComponent: React.FC<RecipeComponentProps> = ({ className, iconType, children }) => {
   return (
     <div className={clsx(className, styles["recipe-component"])}>
-      {iconType === "ingredients" && <DishIcon />}
-      {iconType === "equipment" && <LadleIcon />}
+      {iconType === "ingredients" && (
+        <DishIcon
+          color="var(--color-brand)"
+          width={24}
+          height={24}
+        />
+      )}
+      {iconType === "equipment" && (
+        <LadleIcon
+          color="var(--color-brand)"
+          width={24}
+          height={24}
+        />
+      )}
 
       <Text
         className={styles["recipe-component__text"]}

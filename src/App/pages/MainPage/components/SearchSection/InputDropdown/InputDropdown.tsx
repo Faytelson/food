@@ -74,7 +74,7 @@ const InputDropdown: React.FC<InputDropdownProps> = ({
         value={inputValue}
         placeholder={getTitle(value)}
         disabled={disabled}
-        afterSlot={<ArrowDownIcon></ArrowDownIcon>}
+        afterSlot={<ArrowDownIcon />}
         onClick={() => {
           if (disabled) return;
           setIsOpen((prev) => !prev);

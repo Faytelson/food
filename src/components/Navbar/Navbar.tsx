@@ -3,14 +3,14 @@ import { NavLink } from "react-router";
 import styles from "./Navbar.module.scss";
 import clsx from "clsx";
 
-export type NavLink = {
+export type NavLinkType = {
   label: string;
   href: string;
 };
 
 export type NavbarProps = {
   className?: string;
-  navLinks: NavLink[];
+  navLinks: NavLinkType[];
   onClick: () => void;
 };
 

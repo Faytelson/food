@@ -24,7 +24,7 @@ const CardListBase = ({ recipes }: CardListProps) => {
       image: imageData,
       captionSlot: (
         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <ClockIcon />
+          <ClockIcon style={{color: "var(--color-brand)", position:"relative", top: "-1px"}} />
           {r.preparationTime} minutes
         </span>
       ),

@@ -21,10 +21,18 @@
 
   &__button-prev {
     margin-right: 15px;
+
+    &_disabled {
+      color: var(--color-text-disabled);
+    }
   }
 
   &__button-next {
     margin-left: 15px;
+    
+    &_disabled {
+      color: var(--color-text-disabled);
+    }
   }
 
   &__button {
