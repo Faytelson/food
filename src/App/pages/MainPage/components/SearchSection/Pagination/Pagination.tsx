@@ -1,6 +1,6 @@
 import React from "react";
-import ArrowLeftIcon from "@components/icons/ArrowLeftIcon";
-import ArrowRightIcon from "@components/icons/ArrowRightIcon";
+import ArrowLeftIcon from "@assets/icons/arrow_left.svg?react";
+import ArrowRightIcon from "@assets/icons/arrow-right.svg?react";
 import clsx from "clsx";
 import styles from "./Pagination.module.scss";
 
@@ -75,12 +75,15 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* prev btn */}
         <li key="button-prev">
           <button
-            className={styles["pagination__button-prev"]}
+            className={clsx(
+              styles["pagination__button-prev"],
+              currentPage === 1 ? styles["pagination__button-prev_disabled"] : "",
+            )}
             onClick={onPrev}
             disabled={currentPage === 1}
             aria-label="Previous Page"
           >
-            <ArrowLeftIcon color={currentPage === 1 ? "secondary" : "primary"}></ArrowLeftIcon>
+            <ArrowLeftIcon></ArrowLeftIcon>
           </button>
         </li>
 
@@ -117,12 +120,15 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Next */}
         <li key="button-next">
           <button
-            className={styles["pagination__button-next"]}
+            className={clsx(
+              styles["pagination__button-next"],
+              currentPage === totalPages ? styles["pagination__button-next_disabled"] : "",
+            )}
             onClick={onNext}
             disabled={currentPage === totalPages}
             aria-label="Next Page"
           >
-            <ArrowRightIcon color={currentPage === totalPages ? "secondary" : "primary"}></ArrowRightIcon>
+            <ArrowRightIcon />
           </button>
         </li>
       </ul>

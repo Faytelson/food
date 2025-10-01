@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import { authStore } from "@stores/AuthStore";
 import { observer } from "mobx-react-lite";
+import { Link } from "react-router";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
 
 import Logo from "@components/Logo";
-import Navbar, { type NavLink } from "@components/Navbar";
-import ButtonTool from "@components/ButtonTool";
+import Navbar, { type NavLinkType } from "@components/Navbar";
 import Modal from "@components/Modal";
 import Text from "@components/Text";
+import HeartIcon from "@assets/icons/heart.svg?react";
+import ProfileIcon from "@assets/icons/user.svg?react";
 
 type HeaderProps = {
   className?: string;
 };
 
-const navLinks: NavLink[] = [
+const navLinks: NavLinkType[] = [
   { label: "Recipes", href: "/" },
   { label: "Meals Categories", href: "/meals-categories" },
   { label: "Products", href: "/products" },
@@ -44,17 +46,19 @@ const HeaderBase: React.FC<HeaderProps> = ({ className }) => {
         ></Navbar>
 
         <div className={styles["header__tools"]}>
-          <ButtonTool
-            variant="favorite"
-            iconProps={{ width: 19, height: 19, color: "accent" }}
+          <Link
             to="/favorites"
-          ></ButtonTool>
+            className={styles["header__tool-btn"]}
+          >
+            <HeartIcon />
+          </Link>
 
-          <ButtonTool
-            variant="profile"
-            iconProps={{ width: 24, height: 24, color: "accent" }}
+          <button
             onClick={() => setIsModalOpen(true)}
-          ></ButtonTool>
+            className={styles["header__tool-btn"]}
+          >
+            <ProfileIcon />
+          </button>
         </div>
 
         <Modal
@@ -72,7 +76,7 @@ const HeaderBase: React.FC<HeaderProps> = ({ className }) => {
               </button>
             </>
           )}
-          
+
           {!authStore.isAuth && (
             <div className={styles["auth-forms"]}>
               <div>

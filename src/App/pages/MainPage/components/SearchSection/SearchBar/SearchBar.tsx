@@ -1,6 +1,6 @@
 import React from "react";
 import Input from "../Input";
-import SearchIcon from "@components/icons/SearchIcon";
+import SearchIcon from "@assets/icons/search.svg?react";
 import styles from "./SearchBar.module.scss";
 
 type SearchBarProps = {
@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
         onClick={handleChange}
         className={styles["search-bar__button"]}
       >
-        <SearchIcon className={styles["search-bar__search-icon"]}></SearchIcon>
+        <SearchIcon className={styles["search-bar__search-icon"]} />
       </button>
     </div>
   );

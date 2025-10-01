@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import ArrowLeftIcon from "@components/icons/ArrowLeftIcon";
+import ArrowLeftIcon from "@assets/icons/arrow_left.svg?react";
 
 type ButtonBackProps = {
   className?: string;
@@ -25,11 +25,7 @@ const ButtonBack: React.FC<ButtonBackProps> = ({ className, fallbackPath = "/" }
       className={className || "button-back"}
       aria-label="Go back"
     >
-      <ArrowLeftIcon
-        width={32}
-        height={32}
-        color="accent"
-      ></ArrowLeftIcon>
+      <ArrowLeftIcon></ArrowLeftIcon>
     </button>
   );
 };
