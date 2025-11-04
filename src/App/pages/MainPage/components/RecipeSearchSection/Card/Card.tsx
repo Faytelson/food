@@ -11,7 +11,7 @@ export type CardImage = {
 
 export type CardProps = {
   className?: string;
-  image: CardImage;
+  images: CardImage;
   captionSlot?: React.ReactNode;
   title: string;
   subtitle: React.ReactNode;
@@ -21,7 +21,7 @@ export type CardProps = {
 
 const Card: React.FC<CardProps> = ({
   className,
-  image,
+  images,
   captionSlot,
   title,
   subtitle,
@@ -34,8 +34,8 @@ const Card: React.FC<CardProps> = ({
     >
       <div className={styles["card__image-section"]}>
         <img
-          src={image.url}
-          alt={image.alt}
+          src={images.url}
+          alt={images.alt}
           className={styles["card__image"]}
         />
       </div>

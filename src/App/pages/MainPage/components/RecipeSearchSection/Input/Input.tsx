@@ -6,6 +6,7 @@ export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onCh
   value: string;
   onChange: (value: string) => void;
   afterSlot?: React.ReactNode;
+  className?: string;
 };
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

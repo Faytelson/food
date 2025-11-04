@@ -9,70 +9,36 @@ import { Link } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
-import { getRecipes } from "@api/recipes";
-import qs from "qs";
+import { fetchRecipes, fetchCategories } from "@api/recipes";
 
 export type RecipeSearchSectionProps = {
   className?: string;
 };
 
-export type QueryFilters = {
-  category?: {
-    id: { $eq: number };
-  };
-  name?: {
-    $containsi: string;
-  };
-};
+// export type QueryFilters = {
+//   category?: {
+//     id: { $eq: number };
+//   };
+//   name?: {
+//     $containsi: string;
+//   };
+// };
 
-export type QueryObj = {
-  populate: string[];
-  pagination?: {
-    page: number;
-    pageSize: number;
-  };
-  filters?: QueryFilters;
-};
+// export type QueryObj = {
+//   populate: string[];
+//   pagination?: {
+//     page: number;
+//     pageSize: number;
+//   };
+//   filters?: QueryFilters;
+// };
 
-export type FetchParams = {
-  categoryId?: number;
-  searchQuery?: string;
-  page?: number;
-  populate: string[];
-};
-
-type CardWithId = CardProps & { documentId: string };
-
-const fetchRecipes = async ({ categoryId, searchQuery, page = 1, populate }: FetchParams) => {
-  const queryObj: QueryObj = {
-    populate: populate,
-    pagination: {
-      page,
-      pageSize: 9,
-    },
-  };
-
-  if (categoryId || searchQuery) {
-    queryObj.filters = {};
-  }
-
-  if (categoryId) {
-    queryObj.filters = {
-      ...queryObj.filters,
-      category: { id: { $eq: categoryId } },
-    };
-  }
-
-  if (searchQuery) {
-    queryObj.filters = {
-      ...queryObj.filters,
-      name: { $containsi: searchQuery },
-    };
-  }
-
-  const query = qs.stringify(queryObj, { encodeValuesOnly: true });
-  return getRecipes(`?${query}`);
-};
+// export type FetchParams = {
+//   categoryId?: number;
+//   searchQuery?: string;
+//   page?: number;
+//   populate: string[];
+// };
 
 const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) => {
   const [categories, setCategories] = useState<Option[]>([]);
@@ -83,89 +49,67 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const getRecipes = async (selectedCategory?: number) => {
+    try {
+      const data = await fetchRecipes(selectedCategory);
+      setRecipes(data);
+      // setTotalPages(data.meta.pagination.pageCount || 1);
+    } catch (err) {
+      throw new Error(`Failed to fetch: ${err}`);
+    }
+  };
+
   useEffect(() => {
-    const fetchInitial = async () => {
+    getRecipes();
+  }, []);
+
+  useEffect(() => {
+    const getCategories = async () => {
       try {
-        const data = await fetchRecipes({ populate: ["images", "category"] });
-        setRecipes(data.data);
-
-        const raw: [number, string][] = data.data
-          .filter((r) => r.category)
-          .map((r) => [r.category?.id as number, r.category?.title as string]);
-
-        const options: Option[] = Array.from(new Map(raw).entries()).map(([key, value]) => ({
-          key,
-          value,
-        }));
-        setCategories(options);
-
-        setTotalPages(data.meta.pagination.pageCount || 1);
+        const data = await fetchCategories();
+        const categories = data.map((category) => {
+          return { key: category.id, value: category.name };
+        });
+        setCategories(categories);
       } catch (err) {
         throw new Error(`Failed to fetch: ${err}`);
       }
     };
-
-    fetchInitial();
+    getCategories();
   }, []);
 
   const getTitle = (option: Option | null) => {
     return option ? option.value : "Categories";
   };
 
-  const updateRecipes = async (params: {
-    categoryId?: number;
-    searchQuery?: string;
-    page?: number;
-  }) => {
-    try {
-      const data = await fetchRecipes({
-        categoryId: params.categoryId,
-        searchQuery: params.searchQuery,
-        page: params.page ?? 1,
-        populate: ["images", "category"],
-      });
-
-      setRecipes(data.data);
-      setTotalPages(data.meta.pagination.pageCount || 1);
-    } catch (err) {
-      throw new Error(`Failed to fetch: ${err}`);
-    }
-  };
-
   const handleCategoryChange = (category: Option | null) => {
     if (category === null) {
       setSelectedCategory(null);
-      updateRecipes({ categoryId: undefined, searchQuery, page: 1 });
+      getRecipes();
       setCurrentPage(1);
       return;
     }
     setSelectedCategory(category);
     const categoryId = Number(category.key);
-    updateRecipes({ categoryId, searchQuery, page: 1 });
+    getRecipes(categoryId);
     setCurrentPage(1);
   };
 
   const handleSearchChange = (value: string) => {
     setSearchInput(value);
     setSearchQuery(value);
-    updateRecipes({ categoryId: selectedCategory?.key, searchQuery: value, page: 1 });
+    getRecipes(selectedCategory?.key);
     setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    updateRecipes({ categoryId: selectedCategory?.key, searchQuery, page });
+    getRecipes(selectedCategory?.key);
   };
 
-  const recipeCards: CardWithId[] = recipes.map((r) => {
-    const imageData = {
-      url: r.images?.[0]?.url ?? "",
-      alt: r.images?.[0]?.name ?? "Recipe Image",
-      id: r.images?.[0]?.id,
-    };
-
+  const recipeCards: CardProps[] = recipes.map((r) => {
     return {
-      image: imageData,
+      images: r.images,
       captionSlot: (
         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <ClockIcon
@@ -221,7 +165,7 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
                 <Link to={`/recipes/${card.documentId}`}>
                   <Card
                     className={styles["recipe-search-section__card"]}
-                    image={card.image}
+                    images={card.images}
                     captionSlot={card.captionSlot}
                     title={card.title}
                     subtitle={card.subtitle}

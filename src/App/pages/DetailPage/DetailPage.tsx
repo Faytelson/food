@@ -4,7 +4,8 @@ import styles from "./DetailPage.module.scss";
 import clsx from "clsx";
 import RecipeDetailSection from "./components/RecipeDetailSection/RecipeDetailSection";
 import { useParams } from "react-router-dom";
-import { getRecipeByDocumentId, type Recipe } from "@api/recipes";
+// import { getRecipeByDocumentId, type Recipe } from "@api/recipes";
+import { fetchRecipes } from "@api/recipes";
 
 export type DetailPageProps = {
   className?: string;
@@ -45,7 +46,8 @@ const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
     const fetchRecipe = async () => {
       try {
         if (!documentId) throw new Error("ID is missing");
-        const data = await getRecipeByDocumentId(documentId);
+        // const data = await getRecipeByDocumentId(documentId);
+        const data = await fetchRecipe();
         const recipe = data.data;
         setRecipe(recipe);
 
