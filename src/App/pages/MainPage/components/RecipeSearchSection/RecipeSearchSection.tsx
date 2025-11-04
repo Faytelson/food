@@ -141,6 +141,7 @@ const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) 
             <SearchBar
               value={searchInput}
               onChange={handleSearchChange}
+              items={[{ key: 1, value: "Item 1" }, { key: 2, value: "Item 2" }, { key: 3, value: "Item 3" }]}
             ></SearchBar>
           }
         </div>
