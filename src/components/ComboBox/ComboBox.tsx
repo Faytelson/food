@@ -77,6 +77,10 @@ const ComboBox = ({
             <li
               key={item.id}
               onMouseDown={() => {
+                if (item.id === -1) {
+                  setIsOpen(false);
+                  return;
+                }
                 onSelectItem(item.name);
                 setIsOpen(false);
               }}

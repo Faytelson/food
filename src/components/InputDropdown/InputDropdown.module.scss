@@ -1,6 +1,12 @@
 .input-dropdown {
   position: relative;
 
+  &__input {
+    & input {
+      cursor: pointer;
+    }
+  }
+
   &__list {
     list-style-type: "none";
     margin: 0;

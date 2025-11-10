@@ -33,34 +33,34 @@ export type Recipe = {
 
 export type RecipesResponse = {
   data: Recipe[];
-  // meta: {
-  //   pagination: {
-  //     total: number;
-  //     page: number;
-  //     pageSize: number;
-  //     pageCount: number;
-  //   };
-  // };
+  total: number;
 };
 
-export const fetchRecipes = async (category?: number | null, search?: string): Promise<Recipe[]> => {
-  let query = supabase.from("recipes").select("*, images(*), categories(*)");
+export const fetchRecipes = async (
+  category?: string | null,
+  search?: string,
+  page: number = 1,
+  pageSize: number = 9,
+): Promise<RecipesResponse> => {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
 
+  let query = supabase.from("recipes").select("*, images(*), categories(*)", { count: "exact" });
   if (category) {
     query = query.eq("category_id", category);
   }
-  
   if (search) {
     query = query.ilike("name", `%${search}%`);
   }
 
-  const { data, error } = await query;
+  const { data, error, count } = await query.range(from, to);
 
   if (error) {
     throw new Error(`${error}`);
   }
+  const totalPages = count ? Math.ceil(count / pageSize) : 1;
 
-  return data;
+  return { data: data, total: totalPages };
 };
 
 export const fetchCategories = async () => {

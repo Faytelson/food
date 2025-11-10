@@ -1,36 +1,33 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "@components/Input";
 import ArrowDownIcon from "@components/icons/ArrowDownIcon";
 import clsx from "clsx";
 import styles from "./InputDropdown.module.scss";
 
 export type Option = {
-  key: number;
+  key: string;
   value: string;
 };
 
 export type InputDropdownProps = {
   className?: string;
   options: Option[];
-  value: Option | null;
+  selected: Option | null;
+  placeholder: string;
   onChange: (value: Option | null) => void;
   disabled?: boolean;
-  getTitle: (value: Option | null) => string;
 };
 
 const InputDropdown: React.FC<InputDropdownProps> = ({
   className,
   options,
-  value,
+  selected,
+  placeholder,
   onChange,
   disabled = false,
-  getTitle,
 }) => {
   const rootRef = useRef<HTMLDivElement | null>(null);
-
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     const onDocMouseDown = (e: MouseEvent) => {
@@ -38,8 +35,6 @@ const InputDropdown: React.FC<InputDropdownProps> = ({
       if (!el) return;
       if (!el.contains(e.target as Node)) {
         setIsOpen(false);
-        setSearch("");
-        setFocused(false);
       }
     };
     document.addEventListener("mousedown", onDocMouseDown);
@@ -47,23 +42,9 @@ const InputDropdown: React.FC<InputDropdownProps> = ({
   }, []);
 
   const toggleOption = (option: Option) => {
-    if (value?.key === option.key) {
-      onChange(null);
-    } else {
-      onChange(option);
-    }
+    onChange(selected?.key === option.key ? null : option);
     setIsOpen(false);
-    setSearch("");
-    setFocused(false);
   };
-
-  const filteredOptions = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return options;
-    return options.filter((option) => option.value.toLowerCase().includes(q));
-  }, [options, search]);
-
-  const inputValue = value ? (focused ? search : getTitle(value)) : "";
 
   return (
     <div
@@ -71,18 +52,17 @@ const InputDropdown: React.FC<InputDropdownProps> = ({
       className={clsx(styles["input-dropdown"], className)}
     >
       <Input
-        value={inputValue}
-        placeholder={getTitle(value)}
+        readOnly
+        value={selected ? selected.value : ""}
+        placeholder={placeholder}
         disabled={disabled}
-        afterSlot={<ArrowDownIcon color="secondary"></ArrowDownIcon>}
+        afterSlot={<ArrowDownIcon color="secondary" />}
         onClick={() => {
           if (disabled) return;
           setIsOpen((prev) => !prev);
         }}
-        onChange={(value: string) => {
-          setSearch(value);
-          if (!isOpen) setIsOpen(true);
-        }}
+        onChange={() => {}}
+        className={styles["input-dropdown__input"]}
       />
 
       {isOpen && !disabled && (
@@ -90,19 +70,15 @@ const InputDropdown: React.FC<InputDropdownProps> = ({
           role="listbox"
           className={styles["input-dropdown__list"]}
         >
-          {filteredOptions.map((opt) => {
-            const selected = value?.key === opt.key;
+          {options.map((opt) => {
+            const selectedOption = selected?.key === opt.key;
             return (
               <li
                 key={opt.key}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                }}
-                onClick={() => {
-                  toggleOption(opt);
-                }}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => toggleOption(opt)}
                 className={clsx(styles["input-dropdown__option"], {
-                  [styles["input-dropdown__option_selected"]]: selected,
+                  [styles["input-dropdown__option_selected"]]: selectedOption,
                 })}
               >
                 <span>{opt.value}</span>

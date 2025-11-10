@@ -65,6 +65,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, getListItems, onSearch
           setItems(null);
           onSearch(v);
         }}
+        onClose={() => setItems(null)}
         {...rest}
       />
 

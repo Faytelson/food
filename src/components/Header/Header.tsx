@@ -10,11 +10,11 @@ type HeaderProps = {
 };
 
 const navLinks: NavLink[] = [
-  { label: "Recipes", href: "/" },
-  { label: "Meals Categories", href: "/meals-categories" },
-  { label: "Products", href: "/products" },
-  { label: "Menu Items", href: "/menu-items" },
-  { label: "Meal Planning", href: "/meal-planning" },
+  { label: "Рецепты", href: "/" },
+  { label: "Категории", href: "/meals-categories" },
+  { label: "Продукты", href: "/products" },
+  { label: "Меню", href: "/menu-items" },
+  { label: "План меню", href: "/meal-planning" },
 ];
 
 const Header: React.FC<HeaderProps> = ({ className }) => {

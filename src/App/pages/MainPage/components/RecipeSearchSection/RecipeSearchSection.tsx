@@ -4,7 +4,9 @@ import SearchBar from "@components/SearchBar";
 import Card, { type CardProps } from "@components/Card";
 import Button from "@components/Button";
 import Pagination from "@components/Pagination";
+import Loader from "@components/Loader";
 import ClockIcon from "@components/icons/ClockIcon";
+import Text from "@components/Text";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
@@ -15,31 +17,6 @@ export type RecipeSearchSectionProps = {
   className?: string;
 };
 
-// export type QueryFilters = {
-//   category?: {
-//     id: { $eq: number };
-//   };
-//   name?: {
-//     $containsi: string;
-//   };
-// };
-
-// export type QueryObj = {
-//   populate: string[];
-//   pagination?: {
-//     page: number;
-//     pageSize: number;
-//   };
-//   filters?: QueryFilters;
-// };
-
-// export type FetchParams = {
-//   categoryId?: number;
-//   searchQuery?: string;
-//   page?: number;
-//   populate: string[];
-// };
-
 const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const [categories, setCategories] = useState<Option[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);
@@ -47,16 +24,27 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const getRecipes = useCallback(async (category?: number | null, query?: string) => {
-    try {
-      const data = await fetchRecipes(category, query);
-      setRecipes(data);
-      // setTotalPages(data.meta.pagination.pageCount || 1);
-    } catch (err) {
-      throw new Error(`Failed to fetch: ${err}`);
-    }
-  }, []);
+  const getRecipes = useCallback(
+    async (category?: string | null, query?: string, page?: number) => {
+      try {
+        setIsLoading(true);
+        const data = await fetchRecipes(category, query, page);
+        if (data.data) {
+          setRecipes(data.data);
+        }
+        setTotalPages(data.total || 1);
+      } catch (err) {
+        throw new Error(`Failed to fetch: ${err}`);
+      } finally {
+        setIsLoading(false);
+        if (!isInitialized) setIsInitialized(true);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     getRecipes();
@@ -79,10 +67,6 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
 
   const getRecipeNames = useCallback(fetchRecipeNames, []);
 
-  const getTitle = (option: Option | null) => {
-    return option ? option.value : "Categories";
-  };
-
   const handleCategoryChange = (category: Option | null) => {
     if (category === null) {
       setSelectedCategory(null);
@@ -91,7 +75,7 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
       return;
     }
     setSelectedCategory(category);
-    const categoryId = Number(category.key);
+    const categoryId = category.key;
     getRecipes(categoryId, searchQuery);
     setCurrentPage(1);
   };
@@ -104,7 +88,7 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    getRecipes(selectedCategory?.key);
+    getRecipes(selectedCategory?.key, searchQuery, page);
   };
 
   const recipeCards: CardProps[] = recipes.map((r) => {
@@ -118,13 +102,13 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
             color="accent"
             style={{ position: "relative", top: "-1px" }}
           />
-          {r.preparationTime} minutes
+          {r.preparationTime} минут
         </span>
       ),
       title: r.name,
       subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
       contentSlot: <span>{Math.round(r.calories)} kcal</span>,
-      actionSlot: <Button onClick={(e) => e.stopPropagation()}>Save</Button>,
+      actionSlot: <Button onClick={(e) => e.stopPropagation()}>Сохранить</Button>,
       documentId: r.documentId,
     };
   });
@@ -142,23 +126,38 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
             onSearch={handleOnSearch}
             name="recipeNameSearch"
             id="recipeNameSearch"
-            placeholder="Search recipes"
+            placeholder="Поиск по названию рецепта"
           />
         </div>
         <div className={styles["recipe-search-section__categories"]}>
           <InputDropdown
             options={categories}
-            value={selectedCategory}
+            selected={selectedCategory}
+            placeholder="Выберите категорию"
             onChange={handleCategoryChange}
-            getTitle={getTitle}
           ></InputDropdown>
         </div>
       </form>
 
-      <section aria-labelledby="search-results">
-        <ul className={styles["recipe-search-section__list"]}>
-          {recipeCards.map((card) => {
-            return (
+      <section
+        className={styles["recipe-search-section__search-results"]}
+        aria-labelledby="search-results"
+      >
+        {isLoading ? (
+          <div className={styles["recipe-search-section__loader-wrapper"]}>
+            <Loader color="var(--color-brand)" />
+          </div>
+        ) : !isInitialized ? null : recipes.length === 0 ? (
+          <Text
+            tag="p"
+            view="p-20"
+            color="primary"
+          >
+            Рецептов не найдено
+          </Text>
+        ) : (
+          <ul className={styles["recipe-search-section__list"]}>
+            {recipeCards.map((card) => (
               <li
                 className={styles["recipe-search-section__item"]}
                 key={card.title}
@@ -172,12 +171,12 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
                     subtitle={card.subtitle}
                     contentSlot={card.contentSlot}
                     actionSlot={card.actionSlot}
-                  ></Card>
+                  />
                 </Link>
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        )}
       </section>
 
       <Pagination
