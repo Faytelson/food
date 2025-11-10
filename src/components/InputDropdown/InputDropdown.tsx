@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Input from "../Input";
+import Input from "@components/Input";
 import ArrowDownIcon from "@components/icons/ArrowDownIcon";
 import clsx from "clsx";
 import styles from "./InputDropdown.module.scss";

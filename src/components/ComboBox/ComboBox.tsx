@@ -1,32 +1,31 @@
 import { useState, useId } from "react";
-import Input from "@app/pages/MainPage/components/RecipeSearchSection/Input";
+import Input from "@components/Input";
+import Loader from "@components/Loader";
 import clsx from "clsx";
 import styles from "./ComboBox.module.scss";
 
+export type ComboBoxItems = { id: number; name: string }[] | null;
+
 export type ComboBoxProps = {
-  items: { key: number; value: string }[] | null;
-  placeholder: string;
-  isLoading?: boolean;
-  onValueChange: (value: string) => void;
+  value: string;
+  items: ComboBoxItems;
+  isLoading: boolean;
+  onChange: (v: string) => void;
+  onSelectItem: (v: string) => void;
   className?: string;
 };
 
 const ComboBox = ({
+  value,
   items = null,
-  placeholder,
   isLoading = false,
-  onValueChange,
+  onChange,
+  onSelectItem,
   className,
+  ...rest
 }: ComboBoxProps) => {
   const listId = useId();
-  const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleChange = (newValue: string) => {
-    setValue(newValue);
-    setIsOpen(!!newValue);
-    onValueChange(newValue);
-  };
 
   return (
     <div
@@ -43,54 +42,51 @@ const ComboBox = ({
     >
       <Input
         value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
+        onChange={(v) => {
+          onChange(v);
+          setIsOpen(true);
+        }}
         className={styles["combo-box__input"]}
+        {...rest}
       />
 
       <ul
         role="listbox"
         id={listId}
-        className={styles["combo-box__list"]}
+        className={clsx(
+          styles["combo-box__list"],
+          { [styles["combo-box__list_open"]]: isOpen },
+          { [styles["combo-box__list_loading"]]: isLoading },
+        )}
       >
-        {isOpen && isLoading && (
+        {isLoading && (
           <li
-            role="option"
-            aria-disabled="true"
-            className={styles["combo-box__list-item"]}
+            key="loader"
+            role="status"
+            aria-live="polite"
+            className={clsx(styles["combo-box__list-item"], styles["combo-box__list-item_loader"])}
           >
-            Loading...
+            <Loader
+              size="s"
+              color="var(--color-brand)"
+            />
           </li>
         )}
-
-        {isOpen &&
-          !isLoading &&
-          (items && items?.length > 0 ? (
-            items?.map((item) => {
-              return (
-                <li
-                  key={item.key}
-                  onMouseDown={() => {
-                    setValue(item.value);
-                    setIsOpen(false);
-                    onValueChange(item.value);
-                  }}
-                  role="option"
-                  className={styles["combo-box__list-item"]}
-                >
-                  {item.value}
-                </li>
-              );
-            })
-          ) : (
+        {items?.map((item) => {
+          return (
             <li
+              key={item.id}
+              onMouseDown={() => {
+                onSelectItem(item.name);
+                setIsOpen(false);
+              }}
               role="option"
-              aria-disabled="true"
               className={styles["combo-box__list-item"]}
             >
-              No matching results
+              {item.name}
             </li>
-          ))}
+          );
+        })}
       </ul>
     </div>
   );

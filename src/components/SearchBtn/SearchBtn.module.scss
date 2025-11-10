@@ -1,0 +1,14 @@
+.search-btn {
+  width: 64px;
+  height: 52px;
+  background-color: var(--color-brand);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &__icon {
+    color: var(--color-white);
+  }
+}
