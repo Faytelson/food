@@ -51,7 +51,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ className, getListItems, onSearch
     [getListItems],
   );
 
-  const debouncedSearchItems = useMemo(() => debounce(searchItems, 1000), [searchItems]);
+  const debouncedSearchItems = useMemo(() => debounce(searchItems, 500), [searchItems]);
 
   return (
     <div className={clsx(styles["search-bar"], className)}>

@@ -86,14 +86,16 @@ export const fetchRecipeNames = async (query: string) => {
   return data;
 };
 
-// export const getRecipeByDocumentId = async (documentId: string) => {
-//   const query = qs.stringify(
-//     {
-//       populate: ["ingradients", "equipments", "directions.image", "images", "category"],
-//     },
-//     { encodeValuesOnly: true },
-//   );
+export const getRecipeByDocumentId = async (documentId: string) => {
+  const { data, error } = await supabase
+    .from("recipes")
+    .select("*, recipe_detail(*), images(*), categories(*)")
+    .eq("documentId", documentId)
+    .single();
 
-//   const response = await api.get(`/recipes/${documentId}?${query}`);
-//   return response.data;
-// };
+  if (error) {
+    throw new Error(`${error}`);
+  }
+
+  return data;
+};

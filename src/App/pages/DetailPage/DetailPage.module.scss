@@ -4,8 +4,14 @@
   background-color: var(--color-main-background);
   padding-top: 49px;
   padding-bottom: 53px;
+  position: relative;
+  min-height: 100vh;
 
   &__inner {
     @include container;
+  }
+
+  &__loader-wrapper {
+    @include loader-wrapper;
   }
 }

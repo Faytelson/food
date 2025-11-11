@@ -17,6 +17,10 @@ export type RecipeSearchSectionProps = {
   className?: string;
 };
 
+export type RecipeCard = CardProps & {
+  documentId: string;
+};
+
 const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const [categories, setCategories] = useState<Option[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);
@@ -24,8 +28,7 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getRecipes = useCallback(
     async (category?: string | null, query?: string, page?: number) => {
@@ -40,7 +43,6 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
         throw new Error(`Failed to fetch: ${err}`);
       } finally {
         setIsLoading(false);
-        if (!isInitialized) setIsInitialized(true);
       }
     },
     [],
@@ -91,7 +93,7 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
     getRecipes(selectedCategory?.key, searchQuery, page);
   };
 
-  const recipeCards: CardProps[] = recipes.map((r) => {
+  const recipeCards: RecipeCard[] = recipes.map((r) => {
     return {
       images: r.images,
       captionSlot: (
@@ -115,6 +117,11 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
 
   return (
     <section className={clsx(className, styles["recipe-search-section"])}>
+      {isLoading && (
+        <div className={styles["recipe-search-section__loader-wrapper"]}>
+          <Loader color="var(--color-brand)" />
+        </div>
+      )}
       <form
         role="search"
         aria-label="Recipe search"
@@ -126,7 +133,7 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
             onSearch={handleOnSearch}
             name="recipeNameSearch"
             id="recipeNameSearch"
-            placeholder="Поиск по названию рецепта"
+            placeholder="Найти рецепт"
           />
         </div>
         <div className={styles["recipe-search-section__categories"]}>
@@ -143,40 +150,37 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
         className={styles["recipe-search-section__search-results"]}
         aria-labelledby="search-results"
       >
-        {isLoading ? (
-          <div className={styles["recipe-search-section__loader-wrapper"]}>
-            <Loader color="var(--color-brand)" />
-          </div>
-        ) : !isInitialized ? null : recipes.length === 0 ? (
-          <Text
-            tag="p"
-            view="p-20"
-            color="primary"
-          >
-            Рецептов не найдено
-          </Text>
-        ) : (
-          <ul className={styles["recipe-search-section__list"]}>
-            {recipeCards.map((card) => (
-              <li
-                className={styles["recipe-search-section__item"]}
-                key={card.title}
-              >
-                <Link to={`/recipes/${card.documentId}`}>
-                  <Card
-                    className={styles["recipe-search-section__card"]}
-                    images={card.images}
-                    captionSlot={card.captionSlot}
-                    title={card.title}
-                    subtitle={card.subtitle}
-                    contentSlot={card.contentSlot}
-                    actionSlot={card.actionSlot}
-                  />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+        {!isLoading &&
+          (recipes.length === 0 ? (
+            <Text
+              tag="p"
+              view="p-20"
+              color="primary"
+            >
+              Рецептов не найдено
+            </Text>
+          ) : (
+            <ul className={styles["recipe-search-section__list"]}>
+              {recipeCards.map((card) => (
+                <li
+                  className={styles["recipe-search-section__item"]}
+                  key={card.title}
+                >
+                  <Link to={`/recipes/${card.documentId}`}>
+                    <Card
+                      className={styles["recipe-search-section__card"]}
+                      images={card.images}
+                      captionSlot={card.captionSlot}
+                      title={card.title}
+                      subtitle={card.subtitle}
+                      contentSlot={card.contentSlot}
+                      actionSlot={card.actionSlot}
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ))}
       </section>
 
       <Pagination

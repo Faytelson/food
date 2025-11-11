@@ -1,105 +1,118 @@
 import React, { useState, useEffect } from "react";
 import RecipeIntroSection from "./components/RecipeIntroSection";
+import RecipeDetailSection from "./components/RecipeDetailSection/RecipeDetailSection";
+import Loader from "@components/Loader";
+import Text from "@components/Text";
 import styles from "./DetailPage.module.scss";
 import clsx from "clsx";
-import RecipeDetailSection from "./components/RecipeDetailSection/RecipeDetailSection";
 import { useParams } from "react-router-dom";
-// import { getRecipeByDocumentId, type Recipe } from "@api/recipes";
-import { fetchRecipes } from "@api/recipes";
+import { getRecipeByDocumentId, type Recipe } from "@api/recipes";
 
 export type DetailPageProps = {
   className?: string;
 };
 
 export type Ingredient = {
-  id: number;
-  name: string;
+  ingredient: string;
   amount: number;
   unit: string;
 };
 
-export type EquipmentItem = {
-  id: number;
-  name: string;
-};
+export type Ingredients = Ingredient[];
+
+export type Equipment = string[];
 
 export type Direction = {
-  title: string;
-  content: string;
+  step: number;
+  instruction: string;
 };
 
-export type DirectionText = {
-  id: number;
-  description: string;
-};
+export type Directions = Direction[];
 
 const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
   const { documentId } = useParams<{ documentId: string }>();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
-  // const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [recipeMeta, setRecipeMeta] = useState<{ term: string; description: string }[]>([]);
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [equipments, setEquipments] = useState<string[]>([]);
   const [directions, setDirections] = useState<Direction[]>([]);
+  const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
+        setIsLoading(true);
         if (!documentId) throw new Error("ID is missing");
-        // const data = await getRecipeByDocumentId(documentId);
-        const data = await fetchRecipe();
-        const recipe = data.data;
+        const data = await getRecipeByDocumentId(documentId);
+        const recipe = data;
         setRecipe(recipe);
 
         setRecipeMeta([
-          { term: "Preparation", description: `${recipe.preparationTime ?? "—"} minutes` },
-          { term: "Cooking", description: `${recipe.cookingTime ?? "—"} minutes` },
-          { term: "Total", description: `${recipe.totalTime ?? "—"} minutes` },
-          { term: "Likes", description: recipe.likes ?? "—" },
-          { term: "Servings", description: `${recipe.servings ?? "—"} servings` },
-          { term: "Rating", description: recipe.rating ? `${recipe.rating}/5` : "—" },
+          { term: "Подготовка", description: `${recipe.preparationTime ?? "—"} минут` },
+          { term: "Время приготовления", description: `${recipe.cookingTime ?? "—"} минут` },
+          { term: "Общее время", description: `${recipe.totalTime ?? "—"} минут` },
+          { term: "Лайки", description: recipe.likes ?? "—" },
+          { term: "Количество порций", description: `${recipe.servings ?? "—"}` },
+          { term: "Оценка", description: recipe.rating ? `${recipe.rating}/5` : "—" },
         ]);
 
-        const ingredientsList = recipe.ingradients.map((i: Ingredient) => {
+        const details = recipe.recipe_detail[0];
+
+        const ingredientsList = details.ingredients.map((i: Ingredient) => {
           const unitPart = i.unit ? ` ${i.unit}` : "";
-          return `${i.amount}${unitPart} ${i.name}`;
+          return `${i.amount}${unitPart} ${i.ingredient}`;
         });
         setIngredients(ingredientsList);
+        setEquipments(details.equipment);
+        setDescription(details.description.text);
 
-        setEquipments(recipe.equipments.map((e: EquipmentItem) => e.name));
-
-        const directionsList = recipe.directions.map((d: DirectionText, index: number) => ({
-          title: `Step ${index + 1}`,
-          content: d.description,
+        const directionsList = details.directions.map((d: Direction) => ({
+          title: `Step ${d.step}`,
+          content: d.instruction,
         }));
 
         setDirections(directionsList);
       } catch (err) {
         throw new Error(`Failed to fetch recipe: ${err}`);
       } finally {
-        // setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchRecipe();
   }, [documentId]);
 
-  if (!recipe) return <p>Recipe not found</p>;
-
   return (
     <div className={clsx(styles["detail-page"], className)}>
       <div className={styles["detail-page__inner"]}>
-        <RecipeIntroSection
-          title={recipe.name}
-          image={recipe.images && recipe.images[0]}
-          data={recipeMeta}
-          summary={<span dangerouslySetInnerHTML={{ __html: recipe.summary }} />}
-        />
-        <RecipeDetailSection
-          ingredients={ingredients}
-          equipments={equipments}
-          directions={directions}
-        ></RecipeDetailSection>
+        {isLoading ? (
+          <div className={styles["detail-page__loader-wrapper"]}>
+            <Loader color="var(--color-brand)" />
+          </div>
+        ) : !recipe ? (
+          <Text
+            tag="p"
+            view="p-20"
+            color="primary"
+          >
+            Рецептов не найдено
+          </Text>
+        ) : (
+          <>
+            <RecipeIntroSection
+              title={recipe.name}
+              image={recipe.images}
+              data={recipeMeta}
+              summary={<span dangerouslySetInnerHTML={{ __html: description }} />}
+            />
+            <RecipeDetailSection
+              ingredients={ingredients}
+              equipments={equipments}
+              directions={directions}
+            ></RecipeDetailSection>
+          </>
+        )}
       </div>
     </div>
   );
