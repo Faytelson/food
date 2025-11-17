@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Logo from "@components/Logo";
-import Navbar, {type NavLink} from "@components/Navbar";
+import Navbar, { type NavLink } from "@components/Navbar";
 import ButtonTool from "@components/ButtonTool";
+import FormLogin from "@components/FormLogin";
+import Popup from "@components/Popup";
+import { useModal } from "@context/modal/useModal";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
 
@@ -19,6 +22,7 @@ const navLinks: NavLink[] = [
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const { openModal } = useModal();
 
   const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
   const closeNavbar = () => setIsNavbarOpen(false);
@@ -49,7 +53,16 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
             variant="profile"
             iconProps={{ width: 24, height: 24, color: "accent" }}
             onClick={() => {
-              return "open profile";
+              openModal(
+                <Popup
+                  background="light"
+                >
+                  <FormLogin
+                    onSubmit={(e) => console.log(e)}
+                    loading={false}
+                  />
+                </Popup>,
+              );
             }}
           ></ButtonTool>
         </div>

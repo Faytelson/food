@@ -5,12 +5,27 @@ import styles from "./Input.module.scss";
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
   value: string;
   onChange: (value: string) => void;
+  type?: "text" | "email" | "password";
   afterSlot?: React.ReactNode;
   className?: string;
 };
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ value, onChange, afterSlot, className, placeholder, name, id, disabled, ...rest }, ref) => {
+  (
+    {
+      value,
+      onChange,
+      type = "text",
+      afterSlot,
+      className,
+      placeholder,
+      name,
+      id,
+      disabled,
+      ...rest
+    },
+    ref,
+  ) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value);
     };
@@ -19,7 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className={clsx(styles.input, className)}>
         <input
           ref={ref}
-          type="text"
+          type={type}
           value={value}
           placeholder={placeholder ? placeholder : "Text"}
           name={name}

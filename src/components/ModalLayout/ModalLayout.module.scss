@@ -1,0 +1,28 @@
+.modal-layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-backdrop);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &_open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &__popup {
+    position: absolute;
+    top: calc(50% + var(--header-height) / 2);
+    left: 50%;
+    max-height: 80vh;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: var(--border-radius);
+  }
+}

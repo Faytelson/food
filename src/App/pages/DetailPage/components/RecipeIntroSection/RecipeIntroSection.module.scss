@@ -18,7 +18,6 @@
   &__img-container {
     border-radius: var(--border-radius);
     overflow: hidden;
-    aspect-ratio: 1/1;
 
     @media screen and (min-width: 600px) {
       max-width: 500px;

@@ -1,0 +1,19 @@
+@use "@styles" as *;
+
+.form {
+  width: 100%;
+
+  &__title {
+    margin-bottom: var(--space-m);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--space-s);
+  }
+
+  &__loader-wrapper {
+    @include loader-wrapper;
+  }
+}
