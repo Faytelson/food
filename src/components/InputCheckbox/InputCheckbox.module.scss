@@ -1,0 +1,67 @@
+.input-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    height: 1px;
+    width: 1px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+
+    &:checked {
+      visibility: hidden;
+    }
+  }
+
+  &__mark {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    display: inline-block;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-text-primary);
+    border-radius: 4px;
+
+    &:hover {
+      border: 1px solid var(--color-brand);
+    }
+
+    &_disabled,
+    &_disabled:hover {
+      background-color: var(--color-disabled);
+      border: 1px solid var(--color-text-disabled);
+      cursor: not-allowed;
+    }
+
+    &_checked {
+      background-color: var(--color-white);
+      background-image: url("./icon_check.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 14px auto;
+    }
+
+    &_disabled.input-checkbox__mark_checked {
+      background-color: var(--color-disabled);
+      background-image: url("./icon_check_disabled.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 14px auto;
+    }
+  }
+}

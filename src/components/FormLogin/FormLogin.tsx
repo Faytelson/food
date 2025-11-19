@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Form, { type FormProps } from "@components/Form";
 import Input from "@components/Input";
+import ButtonOpenRegister from "@components/ButtonOpenRegister";
 
 export type FormLoginProps = Omit<FormProps, "title" | "buttonText" | "children" | "showAgreement">;
 
@@ -15,6 +16,7 @@ const FormLogin = ({ onSubmit, loading, ...rest }: FormLoginProps) => {
       buttonText="Войти"
       loading={loading}
       onSubmit={onSubmit}
+      afterSlot={<ButtonOpenRegister />}
       {...rest}
     >
       <Input

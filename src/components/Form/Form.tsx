@@ -1,5 +1,6 @@
-import React, { type ReactNode } from "react";
+import React, { useState, type ReactNode } from "react";
 import Text from "@components/Text";
+import InputCheckbox from "@components/InputCheckbox";
 import Button from "@components/Button";
 import Loader from "@components/Loader";
 import clsx from "clsx";
@@ -15,6 +16,7 @@ export type FormProps = Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmi
   ref?: React.Ref<HTMLFormElement>;
   className?: string;
   afterSlot?: ReactNode;
+  error?: string;
 };
 
 const Form = ({
@@ -27,11 +29,13 @@ const Form = ({
   ref,
   className,
   afterSlot,
+  error,
   ...rest
 }: FormProps) => {
+  const [isAgreement, setIsAgreement] = useState(false);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (loading) {
-      e.preventDefault();
       return;
     }
     onSubmit(e);
@@ -53,13 +57,21 @@ const Form = ({
       </Text>
 
       <fieldset className={styles.form__content}>
-        {children}
+        <div className={styles.form__inputs}>{children}</div>
 
-        {showAgreement && <span>я согласен со всем</span>}
+        {showAgreement && (
+          <InputCheckbox
+            checked={isAgreement}
+            label="Я согласен с обработкой персональных данных"
+            onChange={() => setIsAgreement(!isAgreement)}
+            className={styles.form__checkbox}
+          />
+        )}
 
         <Button
           type="submit"
-          disabled={loading}
+          disabled={loading || showAgreement && !isAgreement}
+          className={styles["form__button-submit"]}
         >
           {buttonText}
         </Button>
@@ -71,6 +83,16 @@ const Form = ({
         <div className={styles["form__loader-wrapper"]}>
           <Loader />
         </div>
+      )}
+
+      {error && (
+        <Text
+          view="p-20"
+          color="danger"
+          className={styles.form__error}
+        >
+          {error}
+        </Text>
       )}
     </form>
   );

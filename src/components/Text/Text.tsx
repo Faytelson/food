@@ -8,7 +8,7 @@ export type TextProps = {
   tag?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "p" | "span";
   weight?: "normal" | "medium" | "bold";
   children: React.ReactNode;
-  color?: "primary" | "secondary" | "accent";
+  color?: "primary" | "secondary" | "accent" | "danger";
   maxLines?: number;
 };
 
@@ -31,6 +31,7 @@ const colorStyles: Record<NonNullable<TextProps["color"]>, string> = {
   primary: "text_color_primary",
   secondary: "text_color_secondary",
   accent: "text_color_accent",
+  danger: "text_color_danger",
 };
 
 const Text: React.FC<TextProps> = ({

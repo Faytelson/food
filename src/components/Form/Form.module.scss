@@ -10,7 +10,13 @@
   &__content {
     display: flex;
     flex-direction: column;
-    row-gap: var(--space-s);
+    gap: var(--space-m);
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--space-xs);
   }
 
   &__loader-wrapper {
