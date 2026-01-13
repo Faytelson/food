@@ -1,10 +1,12 @@
 import supabase from "./baseClient";
 
-const register = async (emailInputValue: string, passwordInputValue: string) => {
+export const register = async (email: string, password: string) => {
   const { data, error } = await supabase.auth.signUp({
-    email: emailInputValue,
-    password: passwordInputValue,
+    email,
+    password,
   });
+
+  if (data.user) return data;
 
   if (error) {
     throw new Error(`${error}`);

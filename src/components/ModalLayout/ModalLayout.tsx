@@ -17,9 +17,13 @@ const ModalLayout = ({ isOpen, onClose, children }: ModalLayoutProps) => {
       onClick={onClose}
     >
       <div
-        className={styles["modal-layout__popup"]}
+        className={clsx(styles["modal-layout__popup"])}
         onClick={(e) => e.stopPropagation()}
       >
+        <button
+          className={styles["modal-layout__close-btn"]}
+          onClick={onClose}
+        />
         {children}
       </div>
     </div>,

@@ -1,3 +1,5 @@
+@use "@styles" as *;
+
 .modal-layout {
   position: fixed;
   top: 0;
@@ -8,6 +10,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
+  z-index: 999;
 
   &_open {
     opacity: 1;
@@ -24,5 +27,37 @@
     overflow-y: auto;
     overflow-x: hidden;
     border-radius: var(--border-radius);
+    width: 90vw;
+    background-color: var(--color-main-background);
+    max-width: 400px;
+  }
+
+  &__close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    z-index: 999;
+    cursor: pointer;
+
+    &::before,
+    &::after {
+      width: 30px;
+      height: 3px;
+      background-color: var(--color-text-primary);
+      @include pseudo;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &::before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
   }
 }

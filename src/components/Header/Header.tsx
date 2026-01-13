@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import Logo from "@components/Logo";
 import Navbar, { type NavLink } from "@components/Navbar";
-import ButtonTool from "@components/ButtonTool";
-import FormLogin from "@components/FormLogin";
-import Popup from "@components/Popup";
-import { useModal } from "@context/modal/useModal";
+import ButtonOpenModal from "@components/ButtonOpenModal";
+import ProfileIcon from "@components/icons/ProfileIcon";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
 
@@ -14,15 +12,10 @@ type HeaderProps = {
 
 const navLinks: NavLink[] = [
   { label: "Рецепты", href: "/" },
-  { label: "Категории", href: "/meals-categories" },
-  { label: "Продукты", href: "/products" },
-  { label: "Меню", href: "/menu-items" },
-  { label: "План меню", href: "/meal-planning" },
 ];
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
-  const { openModal } = useModal();
 
   const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
   const closeNavbar = () => setIsNavbarOpen(false);
@@ -42,29 +35,17 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
         ></Navbar>
 
         <div className={styles["header__tools"]}>
-          <ButtonTool
-            variant="favorite"
-            iconProps={{ width: 19, height: 19, color: "accent" }}
-            onClick={() => {
-              return "added to favorites";
-            }}
-          ></ButtonTool>
-          <ButtonTool
-            variant="profile"
-            iconProps={{ width: 24, height: 24, color: "accent" }}
-            onClick={() => {
-              openModal(
-                <Popup
-                  background="light"
-                >
-                  <FormLogin
-                    onSubmit={(e) => console.log(e)}
-                    loading={false}
-                  />
-                </Popup>,
-              );
-            }}
-          ></ButtonTool>
+          <p>здесь будет кнопка избранное</p>
+          <ButtonOpenModal
+            modalType="login"
+            icon={
+              <ProfileIcon
+                width={24}
+                height={24}
+                color="accent"
+              />
+            }
+          />
         </div>
 
         <button

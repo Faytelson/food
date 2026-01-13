@@ -1,6 +1,5 @@
-import React, { useState, type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import Text from "@components/Text";
-import InputCheckbox from "@components/InputCheckbox";
 import Button from "@components/Button";
 import Loader from "@components/Loader";
 import clsx from "clsx";
@@ -8,10 +7,10 @@ import styles from "./Form.module.scss";
 
 export type FormProps = Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmit"> & {
   title: string;
-  showAgreement: boolean;
   buttonText: string;
   children: ReactNode;
-  loading: boolean;
+  loading?: boolean;
+  isValid?: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
   ref?: React.Ref<HTMLFormElement>;
   className?: string;
@@ -21,10 +20,10 @@ export type FormProps = Omit<React.FormHTMLAttributes<HTMLFormElement>, "onSubmi
 
 const Form = ({
   title,
-  showAgreement,
   buttonText,
   children,
   loading = false,
+  isValid = false,
   onSubmit,
   ref,
   className,
@@ -32,7 +31,6 @@ const Form = ({
   error,
   ...rest
 }: FormProps) => {
-  const [isAgreement, setIsAgreement] = useState(false);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loading) {
@@ -56,21 +54,25 @@ const Form = ({
         {title}
       </Text>
 
-      <fieldset className={styles.form__content}>
-        <div className={styles.form__inputs}>{children}</div>
+      {error && (
+        <Text
+          view="p-20"
+          color="danger"
+          className={styles.form__error}
+        >
+          {error}
+        </Text>
+      )}
 
-        {showAgreement && (
-          <InputCheckbox
-            checked={isAgreement}
-            label="Я согласен с обработкой персональных данных"
-            onChange={() => setIsAgreement(!isAgreement)}
-            className={styles.form__checkbox}
-          />
-        )}
+      <fieldset
+        className={styles.form__content}
+        disabled={loading}
+      >
+        <div className={styles.form__inputs}>{children}</div>
 
         <Button
           type="submit"
-          disabled={loading || showAgreement && !isAgreement}
+          disabled={!isValid}
           className={styles["form__button-submit"]}
         >
           {buttonText}
@@ -81,18 +83,8 @@ const Form = ({
 
       {loading && (
         <div className={styles["form__loader-wrapper"]}>
-          <Loader />
+          <Loader color="var(--color-white)" />
         </div>
-      )}
-
-      {error && (
-        <Text
-          view="p-20"
-          color="danger"
-          className={styles.form__error}
-        >
-          {error}
-        </Text>
       )}
     </form>
   );
