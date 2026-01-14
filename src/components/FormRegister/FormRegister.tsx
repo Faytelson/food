@@ -10,7 +10,7 @@ import { validateInput, type ValidationResult } from "@utils/validateInput";
 import { register } from "@api/auth";
 import styles from "./FormRegister.module.scss";
 
-export type InputErrors = {
+type InputErrors = {
   email: string | null;
   password: string | null;
   passwordRepeat: string | null;
@@ -37,7 +37,12 @@ const FormRegister = () => {
   });
 
   const noErrors = Object.values(inputErrors).every((error) => error === null);
-  const isValid = noErrors && isAgreement;
+  const isValid =
+    noErrors &&
+    isAgreement &&
+    formData.email !== "" &&
+    formData.password !== "" &&
+    formData.passwordRepeat !== "";
 
   const loading = submitState.state === "loading";
   const error = submitState.state === "error" ? submitState.message : "";
@@ -47,7 +52,6 @@ const FormRegister = () => {
     setSubmitState({ state: "loading" });
     register(formData.email, formData.password)
       .then((data) => {
-        console.log(data);
         if (data?.user) {
           setSubmitState({ state: "success" });
           resetForm();
