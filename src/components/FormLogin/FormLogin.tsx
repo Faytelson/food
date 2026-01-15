@@ -3,7 +3,7 @@ import Form from "@components/Form";
 import Input from "@components/Input";
 import AuthPromptHint from "@components/AuthPromptHint";
 import ButtonOpenModal from "@components/ButtonOpenModal";
-import Text from "@components/Text";
+import FeedbackMessage from "@components/FeedbackMessage";
 import ProfileSuccessIcon from "@components/icons/ProfileSuccessIcon";
 import { validateInput, type ValidationResult } from "@utils/validateInput";
 import { type SubmitStates } from "@components/FormRegister";
@@ -174,19 +174,13 @@ const FormLogin = () => {
         ></Input>
       </Form>
       {success && (
-        <div className={styles["form-login__success-message"]}>
+        <FeedbackMessage text="Вы успешно вошли в систему">
           <ProfileSuccessIcon
             color="accent"
             width={56}
             height={56}
           />
-          <Text
-            view="p-18"
-            className={styles["form-login__success-message-text"]}
-          >
-            Вы успешно вошли в систему
-          </Text>
-        </div>
+        </FeedbackMessage>
       )}
     </div>
   );

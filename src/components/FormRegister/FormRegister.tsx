@@ -4,7 +4,7 @@ import Input from "@components/Input";
 import InputCheckbox from "@components/InputCheckbox";
 import AuthPromptHint from "@components/AuthPromptHint";
 import ButtonOpenModal from "@components/ButtonOpenModal/ButtonOpenModal";
-import Text from "@components/Text";
+import FeedbackMessage from "@components/FeedbackMessage";
 import MessageIcon from "@components/icons/MessageIcon";
 import { validateInput, type ValidationResult } from "@utils/validateInput";
 import { register } from "@api/auth";
@@ -221,19 +221,13 @@ const FormRegister = () => {
         />
       </Form>
       {success && (
-        <div className={styles["form-register__success-message"]}>
+        <FeedbackMessage text="Письмо отправлено. Подтвердите регистрацию по ссылке в письме">
           <MessageIcon
             color="accent"
             width={56}
             height={56}
           />
-          <Text
-            view="p-18"
-            className={styles["form-register__success-message-text"]}
-          >
-            Письмо отправлено. <br></br> Подтвердите регистрацию по ссылке в письме
-          </Text>
-        </div>
+        </FeedbackMessage>
       )}
     </div>
   );

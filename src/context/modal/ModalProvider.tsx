@@ -1,7 +1,6 @@
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import ModalLayout from "@components/ModalLayout";
 import ModalContext from "@context/modal/ModalContext";
-import { useEffect } from "react";
 
 const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [content, setContent] = useState<ReactNode | null>(null);

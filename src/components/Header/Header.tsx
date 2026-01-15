@@ -3,6 +3,8 @@ import Logo from "@components/Logo";
 import Navbar, { type NavLink } from "@components/Navbar";
 import ButtonOpenModal from "@components/ButtonOpenModal";
 import ProfileIcon from "@components/icons/ProfileIcon";
+import ProfileSuccessIcon from "@components/icons/ProfileSuccessIcon";
+import { useAuthContext } from "@context/auth/useAuthContext";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
 
@@ -10,12 +12,11 @@ type HeaderProps = {
   className?: string;
 };
 
-const navLinks: NavLink[] = [
-  { label: "Рецепты", href: "/" },
-];
+const navLinks: NavLink[] = [{ label: "Рецепты", href: "/" }];
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const { session } = useAuthContext();
 
   const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
   const closeNavbar = () => setIsNavbarOpen(false);
@@ -36,16 +37,29 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 
         <div className={styles["header__tools"]}>
           <p>здесь будет кнопка избранное</p>
-          <ButtonOpenModal
-            modalType="login"
-            icon={
-              <ProfileIcon
-                width={24}
-                height={24}
-                color="accent"
-              />
-            }
-          />
+          {session ? (
+            <ButtonOpenModal
+              modalType="logout"
+              icon={
+                <ProfileSuccessIcon
+                  width={24}
+                  height={24}
+                  color="accent"
+                />
+              }
+            />
+          ) : (
+            <ButtonOpenModal
+              modalType="login"
+              icon={
+                <ProfileIcon
+                  width={24}
+                  height={24}
+                  color="accent"
+                />
+              }
+            />
+          )}
         </div>
 
         <button
