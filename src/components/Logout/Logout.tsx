@@ -16,8 +16,7 @@ const Logout = () => {
   const onLogout = async () => {
     setSubmitState({ state: "loading" });
     logout()
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         setSubmitState({ state: "success" });
       })
       .catch((error) => {

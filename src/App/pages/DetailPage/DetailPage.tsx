@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import RecipeIntroSection from "./components/RecipeIntroSection";
 import RecipeDetailSection from "./components/RecipeDetailSection/RecipeDetailSection";
+import { type RecipeDirectionType } from "./components/RecipeDetailSection/RecipeDirections";
 import Loader from "@components/Loader";
 import Text from "@components/Text";
 import styles from "./DetailPage.module.scss";
@@ -18,16 +19,16 @@ export type Ingredient = {
   unit: string;
 };
 
-export type Ingredients = Ingredient[];
-
-export type Equipment = string[];
-
 export type Direction = {
   step: number;
   instruction: string;
 };
 
-export type Directions = Direction[];
+export type Ingredients = Ingredient[];
+
+export type Equipment = string[];
+
+export type Directions = RecipeDirectionType[];
 
 const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
   const { documentId } = useParams<{ documentId: string }>();
@@ -36,7 +37,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
   const [recipeMeta, setRecipeMeta] = useState<{ term: string; description: string }[]>([]);
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [equipments, setEquipments] = useState<string[]>([]);
-  const [directions, setDirections] = useState<Direction[]>([]);
+  const [directions, setDirections] = useState<RecipeDirectionType[]>([]);
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {

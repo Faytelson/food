@@ -1,7 +1,6 @@
 import React from "react";
 import RecipeComponentList from "./RecipeComponentsList";
-import RecipeDirections from "./RecipeDirections";
-import { type Direction } from "../../DetailPage";
+import RecipeDirections, { type RecipeDirectionType } from "./RecipeDirections";
 import clsx from "clsx";
 import styles from "./RecipeDetailSection.module.scss";
 
@@ -9,7 +8,7 @@ type RecipeDetailSectionProps = {
   className?: string;
   ingredients: string[];
   equipments: string[];
-  directions: Direction[];
+  directions: RecipeDirectionType[];
 };
 
 const RecipeDetailSection: React.FC<RecipeDetailSectionProps> = ({
