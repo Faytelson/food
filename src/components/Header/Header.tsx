@@ -4,6 +4,7 @@ import Navbar, { type NavLink } from "@components/Navbar";
 import ButtonOpenModal from "@components/ButtonOpenModal";
 import ProfileIcon from "@components/icons/ProfileIcon";
 import ProfileSuccessIcon from "@components/icons/ProfileSuccessIcon";
+import AuthGate from "@components/AuthGate";
 import { useAuthContext } from "@context/auth/useAuthContext";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
@@ -36,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
         ></Navbar>
 
         <div className={styles["header__tools"]}>
-          <p>здесь будет кнопка избранное</p>
+          <AuthGate />
           {session ? (
             <ButtonOpenModal
               modalType="logout"

@@ -3,11 +3,13 @@ import styles from "./Button.module.scss";
 import clsx from "clsx";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  styleType?: "default" | "light";
   loading?: boolean;
   children: React.ReactNode;
 };
 
 const Button: React.FC<ButtonProps> = ({
+  styleType = "default",
   loading = false,
   className,
   children,
@@ -18,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       className={clsx(
         styles.button,
+        styleType == "light" ? styles["button_light"] : "",
         disabled ? styles["button_disabled"] : "",
         loading ? styles["button_loading"] : "",
         className,

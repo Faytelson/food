@@ -16,7 +16,7 @@ export type CardProps = {
   title: string;
   subtitle: React.ReactNode;
   contentSlot?: React.ReactNode;
-  actionSlot?: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const Card: React.FC<CardProps> = ({
@@ -26,12 +26,10 @@ const Card: React.FC<CardProps> = ({
   title,
   subtitle,
   contentSlot,
-  actionSlot,
+  children,
 }) => {
   return (
-    <article
-      className={clsx(styles.card, className)}
-    >
+    <article className={clsx(styles.card, className)}>
       <div className={styles["card__image-section"]}>
         <img
           src={images.url}
@@ -92,7 +90,7 @@ const Card: React.FC<CardProps> = ({
             </div>
           )}
 
-          {actionSlot && <div className={styles["card__action-slot"]}>{actionSlot}</div>}
+          {children && <div className={styles["card__action-slot"]}>{children}</div>}
         </footer>
       </div>
     </article>

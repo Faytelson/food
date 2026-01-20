@@ -7,18 +7,23 @@ import Pagination from "@components/Pagination";
 import Loader from "@components/Loader";
 import ClockIcon from "@components/icons/ClockIcon";
 import Text from "@components/Text";
-import { Link } from "react-router-dom";
+import FormLogin from "@components/FormLogin";
+import ToggleFavorite from "@components/ToggleFavorite";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
 import { fetchRecipes, fetchCategories, fetchRecipeNames } from "@api/recipes";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "@context/auth/useAuthContext";
+import { useModal } from "@context/modal/useModal";
+import { type UUID } from "@api/favorites";
 
 export type RecipeSearchSectionProps = {
   className?: string;
 };
 
 export type RecipeCard = CardProps & {
-  documentId: string;
+  documentId: UUID;
 };
 
 const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
@@ -29,6 +34,10 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
+  const { session } = useAuthContext();
+  const { openModal } = useModal();
 
   const getRecipes = useCallback(
     async (category?: string | null, query?: string, page?: number) => {
@@ -93,27 +102,32 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
     getRecipes(selectedCategory?.key, searchQuery, page);
   };
 
-  const recipeCards: RecipeCard[] = recipes.map((r) => {
-    return {
-      images: r.images,
-      captionSlot: (
-        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <ClockIcon
-            width={15}
-            height={15}
-            color="accent"
-            style={{ position: "relative", top: "-1px" }}
-          />
-          {r.preparationTime} минут
-        </span>
-      ),
-      title: r.name,
-      subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
-      contentSlot: <span>{Math.round(r.calories)} kcal</span>,
-      actionSlot: <Button onClick={(e) => e.stopPropagation()}>Сохранить</Button>,
-      documentId: r.documentId,
-    };
-  });
+  const isUUID = (value: string): value is UUID => {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+  };
+
+  const recipeCards: RecipeCard[] = recipes
+    .filter((r) => isUUID(r.documentId))
+    .map((r) => {
+      return {
+        images: r.images,
+        captionSlot: (
+          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <ClockIcon
+              width={15}
+              height={15}
+              color="accent"
+              style={{ position: "relative", top: "-1px" }}
+            />
+            {r.preparationTime} минут
+          </span>
+        ),
+        title: r.name,
+        subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
+        contentSlot: <span>{Math.round(r.calories)} kcal</span>,
+        documentId: r.documentId,
+      };
+    });
 
   return (
     <section className={clsx(className, styles["recipe-search-section"])}>
@@ -165,18 +179,33 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
                 <li
                   className={styles["recipe-search-section__item"]}
                   key={card.title}
+                  onClick={() => {
+                    navigate(`/recipes/${card.documentId}`);
+                  }}
                 >
-                  <Link to={`/recipes/${card.documentId}`}>
-                    <Card
-                      className={styles["recipe-search-section__card"]}
-                      images={card.images}
-                      captionSlot={card.captionSlot}
-                      title={card.title}
-                      subtitle={card.subtitle}
-                      contentSlot={card.contentSlot}
-                      actionSlot={card.actionSlot}
-                    />
-                  </Link>
+                  <Card
+                    className={styles["recipe-search-section__card"]}
+                    images={card.images}
+                    captionSlot={card.captionSlot}
+                    title={card.title}
+                    subtitle={card.subtitle}
+                    contentSlot={card.contentSlot}
+                  >
+                    {session ? (
+                      <ToggleFavorite recipeId={card.documentId}></ToggleFavorite>
+                    ) : (
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openModal(
+                            <FormLogin title="Войдите в личный кабинет, чтобы сохранять рецепты"></FormLogin>,
+                          );
+                        }}
+                      >
+                        Сохранить
+                      </Button>
+                    )}
+                  </Card>
                 </li>
               ))}
             </ul>

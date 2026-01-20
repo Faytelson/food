@@ -28,16 +28,6 @@ export const login = async (email: string, password: string) => {
   return data;
 };
 
-// export const getUser = async () => {
-//   const { data, error } = await supabase.auth.getUser();
-
-//   if (error) {
-//     throw new Error(error.message);
-//   }
-
-//   return data;
-// };
-
 export const logout = async () => {
   const { error } = await supabase.auth.signOut();
 

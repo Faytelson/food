@@ -15,7 +15,11 @@ type InputErrors = {
   password: string | null;
 };
 
-const FormLogin = () => {
+type FormLoginProps = {
+  title?: string;
+};
+
+const FormLogin = ({ title = "Вход в личный кабинет" }: FormLoginProps) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -135,7 +139,7 @@ const FormLogin = () => {
   return (
     <div className={styles["form-login"]}>
       <Form
-        title="Вход в личный кабинет"
+        title={title}
         buttonText="Войти"
         loading={loading}
         onSubmit={handleOnSubmit}

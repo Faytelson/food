@@ -15,6 +15,12 @@
   border: none;
   cursor: pointer;
 
+  &_light {
+    color: var(--color-white);
+    background-color: var(--color-brand);
+    border: 1px solid var(--color-brand);
+  }
+
   &:not(.button_disabled):not(.button_loading):hover {
     background-color: var(--color-brand-hover);
   }
