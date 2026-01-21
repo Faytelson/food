@@ -16,7 +16,7 @@ import { fetchRecipes, fetchCategories, fetchRecipeNames } from "@api/recipes";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "@context/auth/useAuthContext";
 import { useModal } from "@context/modal/useModal";
-import { type UUID } from "@api/favorites";
+import { type UUID } from "@api/recipes";
 
 export type RecipeSearchSectionProps = {
   className?: string;
@@ -191,8 +191,11 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
                     subtitle={card.subtitle}
                     contentSlot={card.contentSlot}
                   >
-                    {session ? (
-                      <ToggleFavorite recipeId={card.documentId}></ToggleFavorite>
+                    {session && isUUID(session.id) ? (
+                      <ToggleFavorite
+                        userId={session.id}
+                        recipeId={card.documentId}
+                      ></ToggleFavorite>
                     ) : (
                       <Button
                         onClick={(e) => {

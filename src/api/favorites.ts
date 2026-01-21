@@ -1,6 +1,5 @@
 import supabase from "./baseClient";
-
-export type UUID = string & { readonly __brand: unique symbol };
+import { type UUID } from "./recipes";
 
 export const getIsFavorite = async (userId: UUID, recipeId: UUID) => {
   const { data, error } = await supabase
@@ -8,25 +7,21 @@ export const getIsFavorite = async (userId: UUID, recipeId: UUID) => {
     .select("recipe_id")
     .eq("user_id", userId)
     .eq("recipe_id", recipeId)
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error(`${error}`);
   }
 
-  return data;
+  return Boolean(data);
 };
 
 export const addToFavorites = async (userId: UUID, recipeId: UUID) => {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("favorites")
-    .insert([{ user_id: userId, recipe_id: recipeId }]);
+    .insert({ user_id: userId, recipe_id: recipeId });
 
-  if (error) {
-    throw new Error(`${error}`);
-  }
-
-  return data;
+  if (error) throw error;
 };
 
 export const removeFromFavorites = async (userId: UUID, recipeId: UUID) => {

@@ -8,6 +8,7 @@ import styles from "./DetailPage.module.scss";
 import clsx from "clsx";
 import { useParams } from "react-router-dom";
 import { getRecipeByDocumentId, type Recipe } from "@api/recipes";
+import { type UUID } from "@api/recipes";
 
 export type DetailPageProps = {
   className?: string;
@@ -31,7 +32,7 @@ export type Equipment = string[];
 export type Directions = RecipeDirectionType[];
 
 const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
-  const { documentId } = useParams<{ documentId: string }>();
+  const { documentId } = useParams<{ documentId: UUID }>();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [recipeMeta, setRecipeMeta] = useState<{ term: string; description: string }[]>([]);

@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { getIsFavorite, addToFavorites, removeFromFavorites, type UUID } from "@api/favorites";
+import { getIsFavorite, addToFavorites, removeFromFavorites } from "@api/favorites";
+import { type UUID } from "@api/recipes";
 import Button from "@components/Button";
-import styles from "./ToggleFavorite.module.scss";
-import clsx from "clsx";
 
 type ToggleFavoriteProps = {
   userId: UUID;
@@ -18,13 +17,19 @@ const ToggleFavorite = ({ userId, recipeId, className }: ToggleFavoriteProps) =>
     setLoading(true);
 
     if (isFavorite) {
-      const result = await removeFromFavorites(userId, recipeId);
-      console.log(result);
-      setIsFavorite(false);
+      try {
+        await removeFromFavorites(userId, recipeId);
+        setIsFavorite(false);
+      } catch (err) {
+        if (err) throw err;
+      }
     } else {
-      const result = await addToFavorites(userId, recipeId);
-      console.log(result);
-      setIsFavorite(true);
+      try {
+        await addToFavorites(userId, recipeId);
+        setIsFavorite(true);
+      } catch (err) {
+        if (err) throw err;
+      }
     }
 
     setLoading(false);
@@ -36,8 +41,7 @@ const ToggleFavorite = ({ userId, recipeId, className }: ToggleFavoriteProps) =>
     const checkFavorite = async () => {
       setLoading(true);
       const result = await getIsFavorite(userId, recipeId);
-      console.log(result);
-      //   setIsFavorite(result);
+      setIsFavorite(result);
       setLoading(false);
     };
 
@@ -47,7 +51,8 @@ const ToggleFavorite = ({ userId, recipeId, className }: ToggleFavoriteProps) =>
   return (
     <Button
       styleType={isFavorite ? "light" : "default"}
-      className={clsx(className, styles["toggle-favorite"])}
+      loading={loading}
+      className={className}
       onClick={(e) => {
         e.stopPropagation();
         toggleStatus();

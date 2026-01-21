@@ -1,5 +1,7 @@
 import supabase from "./baseClient";
 
+export type UUID = string & { readonly __brand: unique symbol };
+
 export type RecipeImage = {
   id: number;
   alt: string;
@@ -13,7 +15,7 @@ export type RecipeCategory = {
 
 export type Recipe = {
   id: number;
-  documentId: string;
+  documentId: UUID;
   name: string;
   summary: string;
   totalTime: number;
@@ -86,7 +88,7 @@ export const fetchRecipeNames = async (query: string) => {
   return data;
 };
 
-export const getRecipeByDocumentId = async (documentId: string) => {
+export const getRecipeByDocumentId = async (documentId: UUID) => {
   const { data, error } = await supabase
     .from("recipes")
     .select("*, recipe_detail(*), images(*), categories(*)")
