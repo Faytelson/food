@@ -1,29 +1,25 @@
 import { useState, useEffect, useCallback } from "react";
 import InputDropdown, { type Option } from "@components/InputDropdown";
 import SearchBar from "@components/SearchBar";
-import Card, { type CardProps } from "@components/Card";
+import RecipeList from "@components/RecipeList";
+import ToggleFavorite from "@components/ToggleFavorite";
 import Button from "@components/Button";
+import FormLogin from "@components/FormLogin";
 import Pagination from "@components/Pagination";
 import Loader from "@components/Loader";
 import ClockIcon from "@components/icons/ClockIcon";
 import Text from "@components/Text";
-import FormLogin from "@components/FormLogin";
-import ToggleFavorite from "@components/ToggleFavorite";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
 import { fetchRecipes, fetchCategories, fetchRecipeNames } from "@api/recipes";
-import { useNavigate } from "react-router-dom";
+import { type RecipeCard } from "@components/RecipeList";
+import { isUUID } from "@utils/isUUID";
 import { useAuthContext } from "@context/auth/useAuthContext";
 import { useModal } from "@context/modal/useModal";
-import { type UUID } from "@api/recipes";
 
 export type RecipeSearchSectionProps = {
   className?: string;
-};
-
-export type RecipeCard = CardProps & {
-  documentId: UUID;
 };
 
 const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
@@ -35,7 +31,6 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
-  const navigate = useNavigate();
   const { session } = useAuthContext();
   const { openModal } = useModal();
 
@@ -100,10 +95,6 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     getRecipes(selectedCategory?.key, searchQuery, page);
-  };
-
-  const isUUID = (value: string): value is UUID => {
-    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
   };
 
   const recipeCards: RecipeCard[] = recipes
@@ -174,44 +165,28 @@ const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
               Рецептов не найдено
             </Text>
           ) : (
-            <ul className={styles["recipe-search-section__list"]}>
-              {recipeCards.map((card) => (
-                <li
-                  className={styles["recipe-search-section__item"]}
-                  key={card.title}
-                  onClick={() => {
-                    navigate(`/recipes/${card.documentId}`);
-                  }}
-                >
-                  <Card
-                    className={styles["recipe-search-section__card"]}
-                    images={card.images}
-                    captionSlot={card.captionSlot}
-                    title={card.title}
-                    subtitle={card.subtitle}
-                    contentSlot={card.contentSlot}
+            <RecipeList
+              items={recipeCards}
+              renderAction={(item) =>
+                session && isUUID(session.id) ? (
+                  <ToggleFavorite
+                    userId={session.id}
+                    recipeId={item.documentId}
+                  ></ToggleFavorite>
+                ) : (
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openModal(
+                        <FormLogin title="Войдите в личный кабинет, чтобы сохранять рецепты"></FormLogin>,
+                      );
+                    }}
                   >
-                    {session && isUUID(session.id) ? (
-                      <ToggleFavorite
-                        userId={session.id}
-                        recipeId={card.documentId}
-                      ></ToggleFavorite>
-                    ) : (
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openModal(
-                            <FormLogin title="Войдите в личный кабинет, чтобы сохранять рецепты"></FormLogin>,
-                          );
-                        }}
-                      >
-                        Сохранить
-                      </Button>
-                    )}
-                  </Card>
-                </li>
-              ))}
-            </ul>
+                    Сохранить
+                  </Button>
+                )
+              }
+            />
           ))}
       </section>
 

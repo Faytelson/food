@@ -1,5 +1,6 @@
 import supabase from "./baseClient";
-import { type UUID } from "./recipes";
+import { type Recipe, type UUID } from "./recipes";
+import { type RecipesResponse } from "./recipes";
 
 export const getIsFavorite = async (userId: UUID, recipeId: UUID) => {
   const { data, error } = await supabase
@@ -36,4 +37,35 @@ export const removeFromFavorites = async (userId: UUID, recipeId: UUID) => {
   }
 
   return data;
+};
+
+export const getUserFavorites = async (
+  userId: UUID,
+  page: number = 1,
+  pageSize: number = 9,
+): Promise<RecipesResponse> => {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, error, count } = await supabase
+    .from("favorites")
+    .select(
+      `recipes (
+        *,
+        images(*),
+        categories(*) )`,
+      { count: "exact" },
+    )
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const mappedRecipes = data?.flatMap((item) => item.recipes);
+  const totalPages = count ? Math.ceil(count / pageSize) : 1;
+
+  return { data: mappedRecipes, total: totalPages };
 };
