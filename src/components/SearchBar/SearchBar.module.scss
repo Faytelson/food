@@ -1,0 +1,15 @@
+.search-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 19px;
+
+  &__combo-box {
+    flex-grow: 1;
+  }
+
+  &__button {
+    flex-shrink: 0;
+  }
+}

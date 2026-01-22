@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import Logo from "@components/Logo";
-import Navbar, {type NavLink} from "@components/Navbar";
-import ButtonTool from "@components/ButtonTool";
+import Navbar, { type NavLink } from "@components/Navbar";
+import ButtonOpenModal from "@components/ButtonOpenModal";
+import ProfileIcon from "@components/icons/ProfileIcon";
+import ProfileSuccessIcon from "@components/icons/ProfileSuccessIcon";
+import AuthGate from "@components/AuthGate";
+import { useAuthContext } from "@context/auth/useAuthContext";
 import clsx from "clsx";
 import styles from "./Header.module.scss";
 
@@ -9,16 +13,11 @@ type HeaderProps = {
   className?: string;
 };
 
-const navLinks: NavLink[] = [
-  { label: "Recipes", href: "/" },
-  { label: "Meals Categories", href: "/meals-categories" },
-  { label: "Products", href: "/products" },
-  { label: "Menu Items", href: "/menu-items" },
-  { label: "Meal Planning", href: "/meal-planning" },
-];
+const navLinks: NavLink[] = [{ label: "Рецепты", href: "/" }];
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const { session } = useAuthContext();
 
   const toggleNavbar = () => setIsNavbarOpen(!isNavbarOpen);
   const closeNavbar = () => setIsNavbarOpen(false);
@@ -38,20 +37,30 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
         ></Navbar>
 
         <div className={styles["header__tools"]}>
-          <ButtonTool
-            variant="favorite"
-            iconProps={{ width: 19, height: 19, color: "accent" }}
-            onClick={() => {
-              return "added to favorites";
-            }}
-          ></ButtonTool>
-          <ButtonTool
-            variant="profile"
-            iconProps={{ width: 24, height: 24, color: "accent" }}
-            onClick={() => {
-              return "open profile";
-            }}
-          ></ButtonTool>
+          <AuthGate />
+          {session ? (
+            <ButtonOpenModal
+              modalType="logout"
+              icon={
+                <ProfileSuccessIcon
+                  width={24}
+                  height={24}
+                  color="accent"
+                />
+              }
+            />
+          ) : (
+            <ButtonOpenModal
+              modalType="login"
+              icon={
+                <ProfileIcon
+                  width={24}
+                  height={24}
+                  color="accent"
+                />
+              }
+            />
+          )}
         </div>
 
         <button

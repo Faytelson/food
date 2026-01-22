@@ -45,7 +45,7 @@ const RecipeIntroSection: React.FC<RecipeIntroSectionProps> = ({
           <div className={styles["recipe-intro-section__img-container"]}>
             <img
               src={image.url}
-              alt={image.name}
+              alt={image.alt}
               loading="eager"
               className={styles["recipe-intro-section__img"]}
             />

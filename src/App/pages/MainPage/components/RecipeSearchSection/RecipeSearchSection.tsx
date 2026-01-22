@@ -1,238 +1,193 @@
-import React, { useState, useEffect } from "react";
-import InputDropdown, { type Option } from "./InputDropdown";
-import SearchBar from "./SearchBar";
-import Card, { type CardProps } from "./Card";
-import Button from "./Button";
-import Pagination from "./Pagination";
+import { useState, useEffect, useCallback } from "react";
+import InputDropdown, { type Option } from "@components/InputDropdown";
+import SearchBar from "@components/SearchBar";
+import RecipeList from "@components/RecipeList";
+import ToggleFavorite from "@components/ToggleFavorite";
+import Button from "@components/Button";
+import FormLogin from "@components/FormLogin";
+import Pagination from "@components/Pagination";
+import Loader from "@components/Loader";
 import ClockIcon from "@components/icons/ClockIcon";
-import { Link } from "react-router-dom";
+import Text from "@components/Text";
 import clsx from "clsx";
 import styles from "./RecipeSearchSection.module.scss";
 import type { Recipe } from "@api/recipes";
-import { getRecipes } from "@api/recipes";
-import qs from "qs";
+import { fetchRecipes, fetchCategories, fetchRecipeNames } from "@api/recipes";
+import { type RecipeCard } from "@components/RecipeList";
+import { isUUID } from "@utils/isUUID";
+import { useAuthContext } from "@context/auth/useAuthContext";
+import { useModal } from "@context/modal/useModal";
 
 export type RecipeSearchSectionProps = {
   className?: string;
 };
 
-export type QueryFilters = {
-  category?: {
-    id: { $eq: number };
-  };
-  name?: {
-    $containsi: string;
-  };
-};
-
-export type QueryObj = {
-  populate: string[];
-  pagination?: {
-    page: number;
-    pageSize: number;
-  };
-  filters?: QueryFilters;
-};
-
-export type FetchParams = {
-  categoryId?: number;
-  searchQuery?: string;
-  page?: number;
-  populate: string[];
-};
-
-type CardWithId = CardProps & { documentId: string };
-
-const fetchRecipes = async ({ categoryId, searchQuery, page = 1, populate }: FetchParams) => {
-  const queryObj: QueryObj = {
-    populate: populate,
-    pagination: {
-      page,
-      pageSize: 9,
-    },
-  };
-
-  if (categoryId || searchQuery) {
-    queryObj.filters = {};
-  }
-
-  if (categoryId) {
-    queryObj.filters = {
-      ...queryObj.filters,
-      category: { id: { $eq: categoryId } },
-    };
-  }
-
-  if (searchQuery) {
-    queryObj.filters = {
-      ...queryObj.filters,
-      name: { $containsi: searchQuery },
-    };
-  }
-
-  const query = qs.stringify(queryObj, { encodeValuesOnly: true });
-  return getRecipes(`?${query}`);
-};
-
-const RecipeSearchSection: React.FC<RecipeSearchSectionProps> = ({ className }) => {
+const RecipeSearchSection = ({ className }: RecipeSearchSectionProps) => {
   const [categories, setCategories] = useState<Option[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Option | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { session } = useAuthContext();
+  const { openModal } = useModal();
+
+  const getRecipes = useCallback(
+    async (category?: string | null, query?: string, page?: number) => {
+      try {
+        setIsLoading(true);
+        const data = await fetchRecipes(category, query, page);
+        if (data.data) {
+          setRecipes(data.data);
+        }
+        setTotalPages(data.total || 1);
+      } catch (err) {
+        throw new Error(`Failed to fetch: ${err}`);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
-    const fetchInitial = async () => {
+    getRecipes();
+  }, [getRecipes]);
+
+  useEffect(() => {
+    const getCategories = async () => {
       try {
-        const data = await fetchRecipes({ populate: ["images", "category"] });
-        setRecipes(data.data);
-
-        const raw: [number, string][] = data.data
-          .filter((r) => r.category)
-          .map((r) => [r.category?.id as number, r.category?.title as string]);
-
-        const options: Option[] = Array.from(new Map(raw).entries()).map(([key, value]) => ({
-          key,
-          value,
-        }));
-        setCategories(options);
-
-        setTotalPages(data.meta.pagination.pageCount || 1);
+        const data = await fetchCategories();
+        const categories = data.map((category) => {
+          return { key: category.id, value: category.name };
+        });
+        setCategories(categories);
       } catch (err) {
         throw new Error(`Failed to fetch: ${err}`);
       }
     };
-
-    fetchInitial();
+    getCategories();
   }, []);
 
-  const getTitle = (option: Option | null) => {
-    return option ? option.value : "Categories";
-  };
-
-  const updateRecipes = async (params: {
-    categoryId?: number;
-    searchQuery?: string;
-    page?: number;
-  }) => {
-    try {
-      const data = await fetchRecipes({
-        categoryId: params.categoryId,
-        searchQuery: params.searchQuery,
-        page: params.page ?? 1,
-        populate: ["images", "category"],
-      });
-
-      setRecipes(data.data);
-      setTotalPages(data.meta.pagination.pageCount || 1);
-    } catch (err) {
-      throw new Error(`Failed to fetch: ${err}`);
-    }
-  };
+  const getRecipeNames = useCallback(fetchRecipeNames, []);
 
   const handleCategoryChange = (category: Option | null) => {
     if (category === null) {
       setSelectedCategory(null);
-      updateRecipes({ categoryId: undefined, searchQuery, page: 1 });
+      getRecipes(null, searchQuery);
       setCurrentPage(1);
       return;
     }
     setSelectedCategory(category);
-    const categoryId = Number(category.key);
-    updateRecipes({ categoryId, searchQuery, page: 1 });
+    const categoryId = category.key;
+    getRecipes(categoryId, searchQuery);
     setCurrentPage(1);
   };
 
-  const handleSearchChange = (value: string) => {
-    setSearchInput(value);
+  const handleOnSearch = (value: string) => {
     setSearchQuery(value);
-    updateRecipes({ categoryId: selectedCategory?.key, searchQuery: value, page: 1 });
+    getRecipes(selectedCategory?.key, value);
     setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    updateRecipes({ categoryId: selectedCategory?.key, searchQuery, page });
+    getRecipes(selectedCategory?.key, searchQuery, page);
   };
 
-  const recipeCards: CardWithId[] = recipes.map((r) => {
-    const imageData = {
-      url: r.images?.[0]?.url ?? "",
-      alt: r.images?.[0]?.name ?? "Recipe Image",
-      id: r.images?.[0]?.id,
-    };
-
-    return {
-      image: imageData,
-      captionSlot: (
-        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <ClockIcon
-            width={15}
-            height={15}
-            color="accent"
-            style={{ position: "relative", top: "-1px" }}
-          />
-          {r.preparationTime} minutes
-        </span>
-      ),
-      title: r.name,
-      subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
-      contentSlot: <span>{Math.round(r.calories)} kcal</span>,
-      actionSlot: <Button onClick={(e) => e.stopPropagation()}>Save</Button>,
-      documentId: r.documentId,
-    };
-  });
+  const recipeCards: RecipeCard[] = recipes
+    .filter((r) => isUUID(r.documentId))
+    .map((r) => {
+      return {
+        images: r.images,
+        captionSlot: (
+          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <ClockIcon
+              width={15}
+              height={15}
+              color="accent"
+              style={{ position: "relative", top: "-1px" }}
+            />
+            {r.preparationTime} минут
+          </span>
+        ),
+        title: r.name,
+        subtitle: <span dangerouslySetInnerHTML={{ __html: r.summary }}></span>,
+        contentSlot: <span>{Math.round(r.calories)} kcal</span>,
+        documentId: r.documentId,
+      };
+    });
 
   return (
     <section className={clsx(className, styles["recipe-search-section"])}>
+      {isLoading && (
+        <div className={styles["recipe-search-section__loader-wrapper"]}>
+          <Loader color="var(--color-brand)" />
+        </div>
+      )}
       <form
         role="search"
         aria-label="Recipe search"
         className={styles["recipe-search-section__form"]}
       >
         <div className={styles["recipe-search-section__search"]}>
-          {
-            <SearchBar
-              value={searchInput}
-              onChange={handleSearchChange}
-            ></SearchBar>
-          }
+          <SearchBar
+            getListItems={getRecipeNames}
+            onSearch={handleOnSearch}
+            name="recipeNameSearch"
+            id="recipeNameSearch"
+            placeholder="Найти рецепт"
+          />
         </div>
         <div className={styles["recipe-search-section__categories"]}>
           <InputDropdown
             options={categories}
-            value={selectedCategory}
+            selected={selectedCategory}
+            placeholder="Выберите категорию"
             onChange={handleCategoryChange}
-            getTitle={getTitle}
           ></InputDropdown>
         </div>
       </form>
 
-      <section aria-labelledby="search-results">
-        <ul className={styles["recipe-search-section__list"]}>
-          {recipeCards.map((card) => {
-            return (
-              <li
-                className={styles["recipe-search-section__item"]}
-                key={card.title}
-              >
-                <Link to={`/recipes/${card.documentId}`}>
-                  <Card
-                    className={styles["recipe-search-section__card"]}
-                    image={card.image}
-                    captionSlot={card.captionSlot}
-                    title={card.title}
-                    subtitle={card.subtitle}
-                    contentSlot={card.contentSlot}
-                    actionSlot={card.actionSlot}
-                  ></Card>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+      <section
+        className={styles["recipe-search-section__search-results"]}
+        aria-labelledby="search-results"
+      >
+        {!isLoading &&
+          (recipes.length === 0 ? (
+            <Text
+              tag="p"
+              view="p-20"
+              color="primary"
+            >
+              Рецептов не найдено
+            </Text>
+          ) : (
+            <RecipeList
+              items={recipeCards}
+              renderAction={(item) =>
+                session && isUUID(session.id) ? (
+                  <ToggleFavorite
+                    userId={session.id}
+                    recipeId={item.documentId}
+                  ></ToggleFavorite>
+                ) : (
+                  <Button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openModal(
+                        <FormLogin title="Войдите в личный кабинет, чтобы сохранять рецепты"></FormLogin>,
+                      );
+                    }}
+                  >
+                    Сохранить
+                  </Button>
+                )
+              }
+            />
+          ))}
       </section>
 
       <Pagination

@@ -1,21 +1,21 @@
-import api from "./axios";
-import qs from "qs";
+import supabase from "./baseClient";
+
+export type UUID = string & { readonly __brand: unique symbol };
 
 export type RecipeImage = {
   id: number;
-  name: string;
+  alt: string;
   url: string;
 };
 
 export type RecipeCategory = {
   id: number;
-  documentId?: string;
-  title: string;
+  name: string;
 };
 
 export type Recipe = {
   id: number;
-  documentId: string;
+  documentId: UUID;
   name: string;
   summary: string;
   totalTime: number;
@@ -29,35 +29,75 @@ export type Recipe = {
   publishedAt: string;
   likes: number;
   vegetarian: boolean;
-  images?: RecipeImage[];
-  category?: RecipeCategory;
+  images: RecipeImage;
+  category: RecipeCategory;
 };
 
 export type RecipesResponse = {
   data: Recipe[];
-  meta: {
-    pagination: {
-      total: number;
-      page: number;
-      pageSize: number;
-      pageCount: number;
-    };
-  };
+  total: number;
 };
 
-export const getRecipes = async (query = ""): Promise<RecipesResponse> => {
-  const response = await api.get<RecipesResponse>(`/recipes${query}`);
-  return response.data;
+export const fetchRecipes = async (
+  category?: string | null,
+  search?: string,
+  page: number = 1,
+  pageSize: number = 9,
+): Promise<RecipesResponse> => {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  let query = supabase.from("recipes").select("*, images(*), categories(*)", { count: "exact" });
+  if (category) {
+    query = query.eq("category_id", category);
+  }
+  if (search) {
+    query = query.ilike("name", `%${search}%`);
+  }
+
+  const { data, error, count } = await query.range(from, to);
+
+  if (error) {
+    throw new Error(`${error}`);
+  }
+  const totalPages = count ? Math.ceil(count / pageSize) : 1;
+
+  return { data: data, total: totalPages };
 };
 
-export const getRecipeByDocumentId = async (documentId: string) => {
-  const query = qs.stringify(
-    {
-      populate: ["ingradients", "equipments", "directions.image", "images", "category"],
-    },
-    { encodeValuesOnly: true },
-  );
+export const fetchCategories = async () => {
+  const { data, error } = await supabase.from("categories").select("*");
 
-  const response = await api.get(`/recipes/${documentId}?${query}`);
-  return response.data;
+  if (error) {
+    throw new Error(`${error}`);
+  }
+
+  return data;
+};
+
+export const fetchRecipeNames = async (query: string) => {
+  const { data, error } = await supabase
+    .from("recipe_names")
+    .select("*")
+    .ilike("name", `%${query}%`);
+
+  if (error) {
+    throw new Error(`${error}`);
+  }
+
+  return data;
+};
+
+export const getRecipeByDocumentId = async (documentId: UUID) => {
+  const { data, error } = await supabase
+    .from("recipes")
+    .select("*, recipe_detail(*), images(*), categories(*)")
+    .eq("documentId", documentId)
+    .single();
+
+  if (error) {
+    throw new Error(`${error}`);
+  }
+
+  return data;
 };
