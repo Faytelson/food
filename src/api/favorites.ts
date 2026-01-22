@@ -1,5 +1,5 @@
 import supabase from "./baseClient";
-import { type Recipe, type UUID } from "./recipes";
+import { type UUID } from "./recipes";
 import { type RecipesResponse } from "./recipes";
 
 export const getIsFavorite = async (userId: UUID, recipeId: UUID) => {
