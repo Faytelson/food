@@ -1,0 +1,70 @@
+@use "@styles" as *;
+
+.main-page {
+  background-color: var(--color-main-background);
+  padding-bottom: 28px;
+
+  &__loader-wrapper {
+    @include loader-wrapper;
+  }
+
+  &__profile {
+    @include container;
+  }
+
+  &__profile-text {
+    &:not(:last-child) {
+      margin-bottom: var(--space-s);
+    }
+  }
+
+  &__principles {
+    padding: var(--space-xxl) 0;
+  }
+
+  &__recipe-section {
+    @include container;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: var(--space-xl)
+  }
+
+  &__link {
+    height: 52px;
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 17px 20px;
+    font-family: "Roboto";
+    font-weight: var(--text-weight, 400);
+    font-size: 18px;
+    line-height: 100%;
+    color: var(--color-white);
+    background-color: var(--color-brand);
+    border-radius: var(--border-radius);
+    border: none;
+    cursor: pointer;
+
+    &:not(.button_disabled):not(.button_loading):hover {
+      background-color: var(--color-brand-hover);
+    }
+
+    &:active {
+      background-color: var(--color-brand-active);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &_disabled,
+    &_disabled:hover {
+      color: var(--color-white);
+      background-color: var(--color-disabled);
+      border: none;
+    }
+  }
+}

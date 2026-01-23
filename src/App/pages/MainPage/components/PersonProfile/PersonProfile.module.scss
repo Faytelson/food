@@ -1,0 +1,23 @@
+.person-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: var(--space-xl);
+
+  &_reverse {
+    flex-direction: column-reverse;
+  }
+
+  &__img-container {
+    width: 100%;
+    max-width: 900px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+
+  &__img {
+    width: 100%;
+    height: auto;
+  }
+}

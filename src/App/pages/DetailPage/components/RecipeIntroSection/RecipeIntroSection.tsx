@@ -2,7 +2,7 @@ import React from "react";
 import ButtonBack from "@components/ButtonBack";
 import Text from "@components/Text";
 import RecipeMetaList from "./RecipeMetaList";
-import RecipeDescription from "./RecipeDescription";
+import Description from "@components/Description";
 import styles from "./RecipeIntroSection.module.scss";
 import { type RecipeImage } from "@api/recipes";
 import clsx from "clsx";
@@ -55,10 +55,9 @@ const RecipeIntroSection: React.FC<RecipeIntroSectionProps> = ({
           className={styles["recipe-intro-section__meta-list"]}
           items={data}
         ></RecipeMetaList>
-        <RecipeDescription
-          className={styles["recipe-intro-section__description"]}
-          content={summary}
-        ></RecipeDescription>
+        <Description className={styles["recipe-intro-section__description"]}>
+          {summary}
+        </Description>
       </section>
     </section>
   );
