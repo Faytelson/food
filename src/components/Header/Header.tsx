@@ -13,7 +13,10 @@ type HeaderProps = {
   className?: string;
 };
 
-const navLinks: NavLink[] = [{ label: "Рецепты", href: "/" }];
+const navLinks: NavLink[] = [
+  { label: "Главная", href: "/" },
+  { label: "Рецепты", href: "/recipes" },
+];
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
