@@ -42,7 +42,7 @@ export const fetchRecipes = async (
   category?: string | null,
   search?: string,
   page: number = 1,
-  pageSize: number = 9,
+  pageSize: number = 12,
 ): Promise<RecipesResponse> => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
