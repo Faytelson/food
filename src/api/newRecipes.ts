@@ -1,7 +1,7 @@
 import supabase from "./baseClient";
 import { type Recipe } from "@api/recipes";
 
-export const fetchNewRecipes = async (limit: number = 3): Promise<Recipe[]> => {
+export const fetchNewRecipes = async (limit: number = 4): Promise<Recipe[]> => {
   const { data, error } = await supabase
     .from("recipes")
     .select("*, images(*), categories(*)")

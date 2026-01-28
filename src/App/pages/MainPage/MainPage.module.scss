@@ -8,7 +8,11 @@
   }
 
   &__intro-section {
-    padding-bottom: var(--space-xl);
+    padding-bottom: var(--space-l);
+
+    @media screen and (min-width: 768px) {
+      padding-bottom: var(--space-xl);
+    }
   }
 
   &__profile-section {
@@ -23,16 +27,31 @@
   }
 
   &__principles-section {
-    padding-bottom: var(--space-xxl);
+    padding-bottom: var(--space-xl);
+    @include container;
+
+    @media screen and (min-width: 1200px) {
+      padding-bottom: var(--space-xxl);
+    }
   }
 
   &__recipe-section {
     @include container;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    row-gap: var(--space-xl);
-    padding-bottom: var(--space-xxl);
+    row-gap: var(--space-l);
+    padding-bottom: var(--space-xl);
+
+    @media screen and (min-width: 1200px) {
+      row-gap: var(--space-xl);
+      padding-bottom: var(--space-xxl);
+    }
+  }
+
+  &__recipes-title {
+    text-align: center;
   }
 
   &__link {
@@ -78,6 +97,7 @@
     align-items: center;
     justify-content: center;
     padding-bottom: var(--space-xxl);
+    @include container;
   }
 
   &__feedback-inner {
