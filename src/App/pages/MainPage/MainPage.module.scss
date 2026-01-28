@@ -2,13 +2,17 @@
 
 .main-page {
   background-color: var(--color-main-background);
-  padding-bottom: 28px;
 
   &__loader-wrapper {
     @include loader-wrapper;
   }
 
-  &__profile {
+  &__intro-section {
+    padding-bottom: var(--space-xl);
+  }
+
+  &__profile-section {
+    padding-bottom: var(--space-xxl);
     @include container;
   }
 
@@ -18,8 +22,8 @@
     }
   }
 
-  &__principles {
-    padding: var(--space-xxl) 0;
+  &__principles-section {
+    padding-bottom: var(--space-xxl);
   }
 
   &__recipe-section {
@@ -27,7 +31,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: var(--space-xl)
+    row-gap: var(--space-xl);
+    padding-bottom: var(--space-xl);
   }
 
   &__link {
@@ -66,5 +71,21 @@
       background-color: var(--color-disabled);
       border: none;
     }
+  }
+
+  &__feedback-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-item-background);
+    padding-top: var(--space-xxl);
+    padding-bottom: var(--space-xl);
+  }
+
+  &__feedback-inner {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--color-main-background);
+    border-radius: var(--border-radius);
   }
 }

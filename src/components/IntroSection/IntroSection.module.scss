@@ -9,6 +9,11 @@
     flex-grow: 1;
     width: 100%;
     aspect-ratio: 1;
+    margin-bottom: var(--space-l);
+
+    @media screen and (min-width: 425px) {
+      aspect-ratio: 2.518 /1;
+    }
   }
 
   &__picture,
@@ -20,28 +25,10 @@
 
   &__title {
     text-align: center;
-    padding-top: var(--space-l);
-    padding-bottom: var(--space-l);
     @include container;
 
     a {
       text-decoration: underline;
-    }
-  }
-}
-
-@media screen and (min-width: 425px) {
-  .intro-section {
-    &__img-container {
-      aspect-ratio: 2.518 /1;
-    }
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .intro-section {
-    &__title {
-      padding-bottom: var(--space-xl);
     }
   }
 }

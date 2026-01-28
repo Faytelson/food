@@ -15,6 +15,7 @@ import ToggleFavorite from "@components/ToggleFavorite";
 import Button from "@components/Button";
 import FormLogin from "@components/FormLogin";
 import Text from "@components/Text";
+import FormFeedback from "@components/FormFeedback/FormFeedback";
 import { Link } from "react-router";
 import { fetchNewRecipes } from "@api/newRecipes";
 import { type Recipe } from "@api/recipes";
@@ -132,12 +133,15 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
         </div>
       )}
 
-      <IntroSection image={{ title: "Наталия пробует суп", url: IntroImage }}>
+      <IntroSection
+        image={{ title: "Наталия пробует суп", url: IntroImage }}
+        className={styles["main-page__intro-section"]}
+      >
         Я - Наталия Русановская, повар по призванию и по любви. Приглашаю вас окунуться в мир
         кулинарии вместе со мной!
       </IntroSection>
 
-      <section className={styles["main-page__profile"]}>
+      <section className={styles["main-page__profile-section"]}>
         <PersonProfile
           imgUrl={ProfileImage}
           imgTitle="Наталья с пирогом собственного производства"
@@ -164,7 +168,7 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
         </PersonProfile>
       </section>
 
-      <section className={styles["main-page__principles"]}>
+      <section className={styles["main-page__principles-section"]}>
         <InfoCardsBlock
           title="Мои принципы: "
           items={principles}
@@ -208,6 +212,10 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
         >
           Все рецепты
         </Link>
+      </section>
+
+      <section className={styles["main-page__feedback-section"]}>
+        <FormFeedback className={styles["main-page__feedback-inner"]} />
       </section>
     </div>
   );

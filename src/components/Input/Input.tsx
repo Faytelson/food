@@ -6,7 +6,7 @@ import styles from "./Input.module.scss";
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
   value: string;
   onChange: (value: string) => void;
-  type?: "text" | "email" | "password";
+  type?: "text" | "email" | "password" | "tel";
   afterSlot?: React.ReactNode;
   error?: string | null;
   className?: string;
