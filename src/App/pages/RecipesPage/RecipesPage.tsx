@@ -12,8 +12,12 @@ export type RecipesPageProps = {
 const RecipesPage: React.FC<RecipesPageProps> = ({ className }) => {
   return (
     <div className={clsx(className, styles["recipes-page"])}>
-      <IntroSection image={{ title: "Recipes Intro", url: IntroImage }}>
-        Я подготовила для вас свои лучшие рецепты: здесь собраны блюда от будничных обедов до праздничных застолий
+      <IntroSection
+        image={{ title: "Recipes Intro", url: IntroImage }}
+        className={styles["recipes-page__intro-section"]}
+      >
+        Я подготовила для вас свои лучшие рецепты: здесь собраны блюда от будничных обедов до
+        праздничных застолий
       </IntroSection>
       <RecipeSearchSection />
     </div>

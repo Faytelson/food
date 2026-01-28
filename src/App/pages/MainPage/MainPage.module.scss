@@ -32,7 +32,7 @@
     flex-direction: column;
     align-items: center;
     row-gap: var(--space-xl);
-    padding-bottom: var(--space-xl);
+    padding-bottom: var(--space-xxl);
   }
 
   &__link {
@@ -77,15 +77,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-item-background);
-    padding-top: var(--space-xxl);
-    padding-bottom: var(--space-xl);
+    padding-bottom: var(--space-xxl);
   }
 
   &__feedback-inner {
     width: 100%;
     max-width: 500px;
-    background-color: var(--color-main-background);
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
     border-radius: var(--border-radius);
   }
 }

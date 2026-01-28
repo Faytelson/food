@@ -1,0 +1,19 @@
+@use "@styles" as *;
+
+.footer {
+  padding: var(--space-m) 0;
+  background-color: var(--color-item-background);
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @include container;
+  }
+
+  &__info {
+    &:not(:last-child) {
+      margin-bottom: var(--space-xxs);
+    }
+  }
+}

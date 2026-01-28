@@ -1,4 +1,8 @@
 .recipes-page {
   background-color: var(--color-main-background);
   padding-bottom: 28px;
+
+  &__intro-section {
+    padding-bottom: var(--space-xl);
+  }
 }
