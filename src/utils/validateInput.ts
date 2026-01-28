@@ -5,6 +5,7 @@ export type ValidationRule =
   | { type: "email" }
   | { type: "password" }
   | { type: "passwordRepeat"; value: string }
+  | { type: "phone" }
   | { type: "pattern"; value: RegExp };
 
 export type ValidationResult = { valid: true } | { valid: false; error: string };
@@ -65,6 +66,19 @@ export function validateInput(value: string, rules: ValidationRule[]): Validatio
           return {
             valid: false,
             error: "Пароли не совпадают",
+          };
+        }
+        break;
+      }
+
+      case "phone": {
+        const cleaned = value.replace(/[\s()-]/g, "");
+        const phoneRegex = /^(?:\+7\d{10}|8\d{10}|\+375\d{9}|\+7[67]\d{9})$/;
+
+        if (!phoneRegex.test(cleaned)) {
+          return {
+            valid: false,
+            error: "Неправильный формат номера",
           };
         }
         break;

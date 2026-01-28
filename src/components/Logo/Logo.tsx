@@ -7,7 +7,7 @@ import clsx from "clsx";
 
 export type LogoProps = {
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const Logo = ({ className, children }: LogoProps) => {
@@ -21,15 +21,17 @@ const Logo = ({ className, children }: LogoProps) => {
         alt="Main Logo"
         className={styles["logo__img"]}
       />
-      <Text
-        view="p-20"
-        tag="p"
-        color="primary"
-        weight="bold"
-        className={styles["logo__text"]}
-      >
-        {children}
-      </Text>
+      {children && (
+        <Text
+          view="p-20"
+          tag="p"
+          color="primary"
+          weight="bold"
+          className={styles["logo__text"]}
+        >
+          {children}
+        </Text>
+      )}
     </Link>
   );
 };

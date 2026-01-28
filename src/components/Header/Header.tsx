@@ -13,7 +13,10 @@ type HeaderProps = {
   className?: string;
 };
 
-const navLinks: NavLink[] = [{ label: "Рецепты", href: "/" }];
+const navLinks: NavLink[] = [
+  { label: "Главная", href: "/" },
+  { label: "Рецепты", href: "/recipes" },
+];
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
@@ -25,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
   return (
     <header className={clsx(styles.header, className)}>
       <div className={styles["header__inner"]}>
-        <Logo className={styles["header__logo"]}>Food Client</Logo>
+        <Logo className={styles["header__logo"]} />
 
         <Navbar
           className={clsx(

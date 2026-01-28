@@ -1,0 +1,13 @@
+.info-cards-block {
+  &__title {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+
+  &__list {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    column-gap: var(--space-xl);
+  }
+}

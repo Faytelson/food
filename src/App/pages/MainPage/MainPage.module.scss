@@ -1,4 +1,89 @@
+@use "@styles" as *;
+
 .main-page {
   background-color: var(--color-main-background);
-  padding-bottom: 28px;
+
+  &__loader-wrapper {
+    @include loader-wrapper;
+  }
+
+  &__intro-section {
+    padding-bottom: var(--space-xl);
+  }
+
+  &__profile-section {
+    padding-bottom: var(--space-xxl);
+    @include container;
+  }
+
+  &__profile-text {
+    &:not(:last-child) {
+      margin-bottom: var(--space-s);
+    }
+  }
+
+  &__principles-section {
+    padding-bottom: var(--space-xxl);
+  }
+
+  &__recipe-section {
+    @include container;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: var(--space-xl);
+    padding-bottom: var(--space-xxl);
+  }
+
+  &__link {
+    height: 52px;
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 17px 20px;
+    font-family: "Roboto";
+    font-weight: var(--text-weight, 400);
+    font-size: 18px;
+    line-height: 100%;
+    color: var(--color-white);
+    background-color: var(--color-brand);
+    border-radius: var(--border-radius);
+    border: none;
+    cursor: pointer;
+
+    &:not(.button_disabled):not(.button_loading):hover {
+      background-color: var(--color-brand-hover);
+    }
+
+    &:active {
+      background-color: var(--color-brand-active);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &_disabled,
+    &_disabled:hover {
+      color: var(--color-white);
+      background-color: var(--color-disabled);
+      border: none;
+    }
+  }
+
+  &__feedback-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: var(--space-xxl);
+  }
+
+  &__feedback-inner {
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.25);
+    border-radius: var(--border-radius);
+  }
 }
