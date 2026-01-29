@@ -78,7 +78,7 @@ export function validateInput(value: string, rules: ValidationRule[]): Validatio
         if (!phoneRegex.test(cleaned)) {
           return {
             valid: false,
-            error: "Неправильный формат номера",
+            error: "Неправильный формат номера: введите номер через +7, 8 или +375",
           };
         }
         break;

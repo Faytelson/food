@@ -5,9 +5,10 @@ import styles from "./FeedbackMessage.module.scss";
 export type FeedbackMessageProps = {
   text: string;
   children: React.ReactNode;
+  afterSlot?: React.ReactNode;
 };
 
-const FeedbackMessage = ({ text, children }: FeedbackMessageProps) => {
+const FeedbackMessage = ({ text, children, afterSlot }: FeedbackMessageProps) => {
   return (
     <div className={styles["feedback-message"]}>
       {children}
@@ -17,6 +18,7 @@ const FeedbackMessage = ({ text, children }: FeedbackMessageProps) => {
       >
         {text}
       </Text>
+      {afterSlot && <div className={styles["feedback-message__after-slot"]}>{afterSlot}</div>}
     </div>
   );
 };
