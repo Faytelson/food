@@ -42,7 +42,7 @@ export const removeFromFavorites = async (userId: UUID, recipeId: UUID) => {
 export const getUserFavorites = async (
   userId: UUID,
   page: number = 1,
-  pageSize: number = 9,
+  pageSize: number = 12,
 ): Promise<RecipesResponse> => {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;

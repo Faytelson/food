@@ -137,7 +137,7 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
         image={{ title: "Наталия пробует суп", url: IntroImage }}
         className={styles["main-page__intro-section"]}
       >
-        Я - Наталия Русановская, повар по призванию и по любви. Приглашаю вас окунуться в мир
+        Я - Наталия Русановская, повар по призванию и по любви. <br /> Приглашаю вас окунуться в мир
         кулинарии вместе со мной!
       </IntroSection>
 
@@ -179,6 +179,7 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
         <Text
           tag="h2"
           view="title"
+          className={styles["main-page__recipes-title"]}
         >
           Посмотрите мои новые рецепты:
         </Text>
