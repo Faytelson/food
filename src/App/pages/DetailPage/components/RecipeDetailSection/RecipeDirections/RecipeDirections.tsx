@@ -24,7 +24,7 @@ const RecipeDirections: React.FC<RecipeDirectionsProps> = ({ items, className })
         weight="medium"
         className={styles["recipe-directions__title"]}
       >
-        Directions
+        Инструкции
       </Text>
       <ul className={styles["recipe-directions__list"]}>
         {items.map((item, index) => (

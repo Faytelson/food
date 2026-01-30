@@ -149,6 +149,7 @@ const FormLogin = ({ title = "Вход в личный кабинет" }: FormLo
             <ButtonOpenModal
               modalType="register"
               text="Зарегистрироваться"
+              ariaLabel="Открыть окно регистрации"
             />
           </AuthPromptHint>
         }

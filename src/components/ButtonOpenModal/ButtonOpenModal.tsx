@@ -7,9 +7,10 @@ import Logout from "@components/Logout";
 import clsx from "clsx";
 import styles from "./ButtonOpenModal.module.scss";
 
-type ModalType = "login" | "register" |"logout";
+type ModalType = "login" | "register" | "logout";
 export type ButtonOpenModalProps = {
   modalType: ModalType;
+  ariaLabel: string;
   text?: string;
   icon?: React.ReactNode;
   className?: string;
@@ -18,10 +19,10 @@ export type ButtonOpenModalProps = {
 const MODAL_COMPONENTS: Record<ModalType, React.FC> = {
   login: FormLogin,
   register: FormRegister,
-  logout : Logout,
+  logout: Logout,
 };
 
-const ButtonOpenModal = ({ modalType, text, icon, className }: ButtonOpenModalProps) => {
+const ButtonOpenModal = ({ modalType, ariaLabel, text, icon, className }: ButtonOpenModalProps) => {
   const { openModal } = useModal();
   const ModalComponent = MODAL_COMPONENTS[modalType];
 
@@ -31,6 +32,7 @@ const ButtonOpenModal = ({ modalType, text, icon, className }: ButtonOpenModalPr
       onClick={() => {
         openModal(<ModalComponent />);
       }}
+      aria-label={ariaLabel}
     >
       {text && <Text className={styles["button-open-modal__text"]}>{text}</Text>}
       {icon}

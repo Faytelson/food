@@ -86,7 +86,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
   }, [documentId]);
 
   return (
-    <div className={clsx(styles["detail-page"], className)}>
+    <main className={clsx(styles["detail-page"], className)}>
       <div className={styles["detail-page__inner"]}>
         {isLoading ? (
           <div className={styles["detail-page__loader-wrapper"]}>
@@ -116,7 +116,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ className }) => {
           </>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 

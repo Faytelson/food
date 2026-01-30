@@ -23,6 +23,7 @@ const ModalLayout = ({ isOpen, onClose, children }: ModalLayoutProps) => {
         <button
           className={styles["modal-layout__close-btn"]}
           onClick={onClose}
+          aria-label="Закрыть окно"
         />
         {children}
       </div>

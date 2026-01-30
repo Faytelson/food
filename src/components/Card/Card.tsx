@@ -35,6 +35,7 @@ const Card: React.FC<CardProps> = ({
           src={images.url}
           alt={images.alt}
           className={styles["card__image"]}
+          loading="lazy"
         />
       </div>
 

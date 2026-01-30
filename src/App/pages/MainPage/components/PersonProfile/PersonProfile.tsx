@@ -3,8 +3,9 @@ import Description from "@components/Description";
 import clsx from "clsx";
 import styles from "./PersonProfile.module.scss";
 
+export type ImageDimensions = { imgUrl_lg: string; imgUrl_sm: string; imgUrl_xs: string };
 export type PersonProfileProps = {
-  imgUrl: string;
+  images: ImageDimensions;
   imgTitle: string;
   styleType?: "default" | "reverse";
   children?: React.ReactNode;
@@ -12,7 +13,7 @@ export type PersonProfileProps = {
 };
 
 const PersonProfile = ({
-  imgUrl,
+  images,
   imgTitle,
   styleType = "default",
   children,
@@ -28,9 +29,14 @@ const PersonProfile = ({
     >
       <div className={styles["person-profile__img-container"]}>
         <img
-          src={imgUrl}
+          src={images.imgUrl_lg}
+          srcSet={`
+            ${images.imgUrl_xs} 320w,
+            ${images.imgUrl_sm} 768w,
+            ${images.imgUrl_lg} 1200w
+          `}
           alt={imgTitle}
-          loading="eager"
+          loading="lazy"
           className={styles["person-profile__img"]}
         />
       </div>

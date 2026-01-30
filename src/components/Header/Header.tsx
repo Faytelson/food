@@ -51,6 +51,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                   color="accent"
                 />
               }
+              ariaLabel="Выйти из профиля"
             />
           ) : (
             <ButtonOpenModal
@@ -62,6 +63,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
                   color="accent"
                 />
               }
+              ariaLabel="Войти в профиль"
             />
           )}
         </div>

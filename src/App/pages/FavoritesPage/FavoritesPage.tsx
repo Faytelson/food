@@ -81,7 +81,7 @@ const FavoritesPage = () => {
     });
 
   return (
-    <section className={styles["favorites-page"]}>
+    <main className={styles["favorites-page"]}>
       {isLoading && (
         <div className={styles["favorites-page__loader-wrapper"]}>
           <Loader color="var(--color-brand)" />
@@ -132,7 +132,7 @@ const FavoritesPage = () => {
           onPageChange={handlePageChange}
         ></Pagination>
       </div>
-    </section>
+    </main>
   );
 };
 
