@@ -7,17 +7,20 @@ import Loader from "@components/Loader";
 import { type SubmitStates } from "@components/FormRegister";
 import { logout } from "@api/auth";
 import { useAuthContext } from "@context/auth/useAuthContext";
+import { useNavigate } from "react-router-dom";
 import styles from "./Logout.module.scss";
 
 const Logout = () => {
   const [submitState, setSubmitState] = useState<SubmitStates>({ state: "idle" });
   const authContext = useAuthContext();
+  const navigate = useNavigate();
 
   const onLogout = async () => {
     setSubmitState({ state: "loading" });
     logout()
       .then(() => {
         setSubmitState({ state: "success" });
+        navigate("/");
       })
       .catch((error) => {
         setSubmitState({ state: "error", message: `Не удалось  разлогиниться: ${error.message}` });

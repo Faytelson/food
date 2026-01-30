@@ -6,7 +6,7 @@ export type MessageData = {
 };
 
 export const fetchFeedback = async (data: MessageData) => {
-  const { error } = await supabase.from("messages").insert([
+  const { error } = await supabase.from("feedback").insert([
     {
       name: data.name,
       phone: data.phone,

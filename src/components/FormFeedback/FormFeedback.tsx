@@ -3,6 +3,7 @@ import Form from "@components/Form";
 import Input from "@components/Input";
 import FeedbackMessage from "@components/FeedbackMessage";
 import ProfileSuccessIcon from "@components/icons/ProfileSuccessIcon";
+import Button from "@components/Button";
 import { validateInput, type ValidationResult } from "@utils/validateInput";
 import { type SubmitStates } from "@components/FormRegister";
 import { fetchFeedback } from "@api/feedback";
@@ -149,7 +150,7 @@ const FormFeedback = ({
   };
 
   return (
-    <div className={clsx((styles["form-feedback"], className))}>
+    <div className={clsx(styles["form-feedback"], className)}>
       <Form
         title={title}
         buttonText="Отправить"
@@ -177,12 +178,23 @@ const FormFeedback = ({
             handleChange("phone", value);
             setErrorsObject("phone", value, checkPhone);
           }}
-          placeholder="Введите пароль"
+          placeholder="Ваш телефон"
           error={inputErrors.phone}
         ></Input>
       </Form>
       {success && (
-        <FeedbackMessage text="Ваше сообщение отправлено. Я свяжусь с Вами как можно скорее!">
+        <FeedbackMessage
+          text="Ваше сообщение отправлено. Я свяжусь с Вами как можно скорее!"
+          afterSlot={
+            <Button
+              onClick={() => {
+                setSubmitState({ state: "idle" });
+              }}
+            >
+              Отправить еще один контакт
+            </Button>
+          }
+        >
           <ProfileSuccessIcon
             color="accent"
             width={56}
