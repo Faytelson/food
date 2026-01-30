@@ -83,7 +83,7 @@ const FavoritesPage = () => {
   return (
     <section className={styles["favorites-page"]}>
       {isLoading && (
-        <div className={styles["recipe-search-section__loader-wrapper"]}>
+        <div className={styles["favorites-page__loader-wrapper"]}>
           <Loader color="var(--color-brand)" />
         </div>
       )}
@@ -103,7 +103,7 @@ const FavoritesPage = () => {
               view="p-20"
               color="primary"
             >
-              Рецептов не найдено
+              Вы еще не добавили ни одного рецепта
             </Text>
           ) : (
             <RecipeList

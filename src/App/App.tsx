@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
 import ModalProvider from "@context/modal/ModalProvider";
@@ -10,6 +10,7 @@ function App() {
     <div className="app">
       <AuthProvider>
         <ModalProvider>
+          <ScrollRestoration />
           <Header />
           <Outlet />
           <Footer />
