@@ -23,11 +23,13 @@ const AuthGate = ({ className }: { className?: string }) => {
     <button
       className={clsx(className, styles["auth-gate"])}
       onClick={handleClick}
+      aria-label="Перейти в избранное"
     >
       <HeartIcon
         width={20}
         height={20}
         color="accent"
+        aria-hidden="true"
       ></HeartIcon>
     </button>
   );

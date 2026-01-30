@@ -20,13 +20,13 @@ const RecipeDetailSection: React.FC<RecipeDetailSectionProps> = ({
   return (
     <section className={clsx(styles["recipe-detail-section"], className)}>
       <RecipeComponentList
-        title="Ingredients"
+        title="Ингредиенты"
         items={ingredients}
         className={styles["recipe-detail-section__ingredients"]}
         type="ingredients"
       ></RecipeComponentList>
       <RecipeComponentList
-        title="Equipment"
+        title="Инвентарь"
         items={equipments}
         className={styles["recipe-detail-section__equipment"]}
         type="equipment"

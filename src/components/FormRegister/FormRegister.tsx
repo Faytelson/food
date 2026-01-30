@@ -175,6 +175,7 @@ const FormRegister = () => {
             <ButtonOpenModal
               modalType="login"
               text="Войти в личный кабинет"
+              ariaLabel="Открыть окно входа в профиль"
             />
           </AuthPromptHint>
         }

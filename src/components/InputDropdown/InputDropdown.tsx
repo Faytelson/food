@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Input from "@components/Input";
 import ArrowDownIcon from "@components/icons/ArrowDownIcon";
+import CheckIcon from "@components/icons/CheckIcon";
 import clsx from "clsx";
 import styles from "./InputDropdown.module.scss";
 
@@ -81,7 +82,7 @@ const InputDropdown: React.FC<InputDropdownProps> = ({
                   [styles["input-dropdown__option_selected"]]: selectedOption,
                 })}
               >
-                <span>{opt.value}</span>
+                <span>{opt.value}</span> {selectedOption && <CheckIcon width={32} height={32} />}
               </li>
             );
           })}

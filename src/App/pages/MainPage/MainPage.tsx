@@ -1,7 +1,11 @@
 import React, { useEffect, useCallback, useState } from "react";
 import IntroSection from "@components/IntroSection";
-import IntroImage from "@assets/images/natalia_intro_lg.jpg";
-import ProfileImage from "@assets/images/natalia_about.png";
+import IntroImageLG from "@assets/images/natalia_intro_lg.jpg";
+import IntroImageSM from "@assets/images/natalia_intro_sm.jpg";
+import IntroImageXS from "@assets/images/natalia_intro_xs.jpg";
+import ProfileImageLG from "@assets/images/natalia_about_lg.png";
+import ProfileImageSM from "@assets/images/natalia_about_sm.png";
+import ProfileImageXS from "@assets/images/natalia_about_xs.png";
 import PersonProfile from "./components/PersonProfile";
 import InfoCardsBlock from "@components/InfoCardsBlock";
 import CheckIcon from "@components/icons/CheckIcon";
@@ -126,7 +130,7 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
     });
 
   return (
-    <div className={clsx(className, styles["main-page"])}>
+    <main className={clsx(className, styles["main-page"])}>
       {isLoading && (
         <div className={styles["main-page__loader-wrapper"]}>
           <Loader color="var(--color-brand)" />
@@ -134,7 +138,10 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
       )}
 
       <IntroSection
-        image={{ title: "Наталия пробует суп", url: IntroImage }}
+        image={{
+          title: "Наталия пробует суп",
+          dimensions: { imgUrl_lg: IntroImageLG, imgUrl_sm: IntroImageSM, imgUrl_xs: IntroImageXS },
+        }}
         className={styles["main-page__intro-section"]}
       >
         Я - Наталия Русановская, повар по призванию и по любви. <br /> Приглашаю вас окунуться в мир
@@ -143,7 +150,11 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
 
       <section className={styles["main-page__profile-section"]}>
         <PersonProfile
-          imgUrl={ProfileImage}
+          images={{
+            imgUrl_lg: ProfileImageLG,
+            imgUrl_sm: ProfileImageSM,
+            imgUrl_xs: ProfileImageXS,
+          }}
           imgTitle="Наталья с пирогом собственного производства"
           styleType="reverse"
         >
@@ -218,7 +229,7 @@ const MainPage: React.FC<MainPageProps> = ({ className }) => {
       <section className={styles["main-page__feedback-section"]}>
         <FormFeedback className={styles["main-page__feedback-inner"]} />
       </section>
-    </div>
+    </main>
   );
 };
 
